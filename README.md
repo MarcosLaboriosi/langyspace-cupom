@@ -136,8 +136,11 @@ Campos principais em `marketing_influencers/{influencerId}`:
 {
   "id": "livia",
   "displayName": "Lívia",
-  "internalLabel": "Lívia Pendente",
-  "onboardingStatus": "pending_details",
+  "fullName": "Livia Tessallya Araújo Aguiar",
+  "internalLabel": "Livia Tessallya Araújo Aguiar",
+  "onboardingStatus": "pending_student_link",
+  "studentAccountStatus": "not_created",
+  "studentId": null,
   "defaultCampaignId": "embaixadoras-2026",
   "defaultCampaignName": "Embaixadoras",
   "defaultCouponCode": "LIVIA10",
