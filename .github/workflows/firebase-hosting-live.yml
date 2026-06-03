@@ -1,0 +1,128 @@
+name: Deploy Firebase Cupom Live
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-cupom-live-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  FIREBASE_HOSTING_TARGET: cupom
+  FIREBASE_PROJECT_ID: langyspace-564b5
+  PNPM_VERSION: 11.2.2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Firebase Hosting changes
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          before="${{ github.event.before }}"
+          after="${{ github.sha }}"
+          empty_sha="0000000000000000000000000000000000000000"
+
+          commit_exists() {
+            git cat-file -e "$1^{commit}" 2>/dev/null
+          }
+
+          if [[ "$before" == "$empty_sha" ]]; then
+            changed_files="$(git ls-files)"
+          elif commit_exists "$before" && commit_exists "$after"; then
+            changed_files="$(git diff --name-only "$before" "$after")"
+          else
+            echo "::warning::Could not resolve push diff commits before=$before after=$after. Treating all tracked files as changed."
+            changed_files="$(git ls-files)"
+          fi
+
+          has_changes() {
+            local pattern="$1"
+
+            if printf '%s\n' "$changed_files" | grep -Eq "$pattern"; then
+              printf 'true'
+            else
+              printf 'false'
+            fi
+          }
+
+          hosting_changed="$(has_changes '^(\.github/workflows/firebase-hosting-live\.yml$|\.env$|\.env\.example$|\.firebaserc$|firebase\.json$|index\.html$|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|src/|tsconfig\.json$|vite\.config\.ts$)')"
+
+          if [[ "$hosting_changed" == "true" ]]; then
+            should_deploy="true"
+            deploy_only="hosting:${FIREBASE_HOSTING_TARGET}"
+          else
+            should_deploy="false"
+            deploy_only=""
+          fi
+
+          {
+            echo "hosting=$hosting_changed"
+            echo "should_deploy=$should_deploy"
+            echo "deploy_only=$deploy_only"
+            echo "changed_files<<EOF"
+            printf '%s\n' "$changed_files"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          printf 'Firebase deploy targets: %s\n' "${deploy_only:-none}"
+
+      - name: Setup pnpm
+        if: steps.changes.outputs.should_deploy == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node
+        if: steps.changes.outputs.should_deploy == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        if: steps.changes.outputs.should_deploy == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        if: steps.changes.outputs.hosting == 'true'
+        run: pnpm run build
+
+      - name: Authenticate to Google Cloud
+        if: steps.changes.outputs.should_deploy == 'true'
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LANGYSPACE_564B5 }}
+
+      - name: Install Firebase CLI
+        if: steps.changes.outputs.should_deploy == 'true'
+        run: npm install -g firebase-tools
+
+      - name: Deploy Firebase Hosting
+        if: steps.changes.outputs.should_deploy == 'true'
+        run: |
+          firebase deploy \
+            --project "$FIREBASE_PROJECT_ID" \
+            --only "${{ steps.changes.outputs.deploy_only }}" \
+            --non-interactive \
+            --force
+
+      - name: Skip deploy
+        if: steps.changes.outputs.should_deploy != 'true'
+        run: echo "No Firebase Hosting deployable files changed."

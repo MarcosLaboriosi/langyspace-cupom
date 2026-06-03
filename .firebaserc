@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "langyspace-564b5"
+  },
+  "targets": {
+    "langyspace-564b5": {
+      "hosting": {
+        "cupom": ["langyspace-cupom"]
+      }
+    }
+  }
+}

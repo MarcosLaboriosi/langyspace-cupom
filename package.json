@@ -1,0 +1,25 @@
+{
+  "name": "@langyspace/cupom",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "deploy": "pnpm run build && npx firebase-tools deploy --only hosting:cupom --project langyspace-564b5"
+  },
+  "dependencies": {
+    "firebase": "^12.13.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "prettier": "^3.8.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.9"
+  }
+}
