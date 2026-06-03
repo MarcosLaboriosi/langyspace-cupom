@@ -18,9 +18,11 @@ export type ShortLinkClickStatus =
 
 export interface ShortLinkModel {
   active: boolean;
+  campaignId: string | null;
   campaignName: string | null;
   couponCode: string | null;
   destinationUrl: string;
+  influencerId: string | null;
   influencerName: string | null;
   medium: string | null;
   slug: string;
@@ -45,10 +47,12 @@ export interface ClickContext extends UtmParams {
 }
 
 export interface ShortLinkClickModel extends ClickContext {
+  campaignId: string | null;
   campaignName: string | null;
   couponCode: string | null;
   createdAt: Timestamp | null;
   destinationUrl: string;
+  influencerId: string | null;
   influencerName: string | null;
   linkTitle: string;
   medium: string | null;

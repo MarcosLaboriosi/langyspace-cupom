@@ -15,8 +15,10 @@ import type { ShortLinkClickModel, ShortLinkModel } from "./types";
 import { mapShortLinkData } from "./utils";
 
 export interface ShortLinkMetricsSummary {
+  clicksByCampaignId: Record<string, number>;
   clicksByCampaign: Record<string, number>;
   clicksByCoupon: Record<string, number>;
+  clicksByInfluencerId: Record<string, number>;
   clicksByInfluencer: Record<string, number>;
   clicksBySlug: Record<string, number>;
   clicksByType: Record<string, number>;
@@ -55,6 +57,7 @@ export const listRecentShortLinkClicks = async (
     const data = documentSnapshot.data();
 
     return {
+      campaignId: typeof data.campaignId === "string" ? data.campaignId : null,
       campaignName:
         typeof data.campaignName === "string" ? data.campaignName : null,
       couponCode: typeof data.couponCode === "string" ? data.couponCode : null,
@@ -62,6 +65,8 @@ export const listRecentShortLinkClicks = async (
       destinationUrl:
         typeof data.destinationUrl === "string" ? data.destinationUrl : "",
       fullUrl: typeof data.fullUrl === "string" ? data.fullUrl : "",
+      influencerId:
+        typeof data.influencerId === "string" ? data.influencerId : null,
       influencerName:
         typeof data.influencerName === "string" ? data.influencerName : null,
       linkTitle: typeof data.linkTitle === "string" ? data.linkTitle : "",
@@ -98,8 +103,10 @@ export const summarizeShortLinkClicks = (
   clicks: ShortLinkClickModel[],
 ): ShortLinkMetricsSummary => {
   const summary: ShortLinkMetricsSummary = {
+    clicksByCampaignId: {},
     clicksByCampaign: {},
     clicksByCoupon: {},
+    clicksByInfluencerId: {},
     clicksByInfluencer: {},
     clicksBySlug: {},
     clicksByType: {},
@@ -107,8 +114,10 @@ export const summarizeShortLinkClicks = (
   };
 
   clicks.forEach((click) => {
+    incrementCounter(summary.clicksByCampaignId, click.campaignId);
     incrementCounter(summary.clicksByCampaign, click.campaignName);
     incrementCounter(summary.clicksByCoupon, click.couponCode);
+    incrementCounter(summary.clicksByInfluencerId, click.influencerId);
     incrementCounter(summary.clicksByInfluencer, click.influencerName);
     incrementCounter(summary.clicksBySlug, click.slug);
     incrementCounter(summary.clicksByType, click.type);

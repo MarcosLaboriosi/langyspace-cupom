@@ -1,0 +1,278 @@
+import { execFileSync } from "node:child_process";
+
+const projectId = "langyspace-564b5";
+const databaseId = "(default)";
+const campaignId = "embaixadoras-2026";
+const campaignName = "Embaixadoras";
+const whatsappPhone = "5534997711070";
+
+const timestamp = (value) => ({ __firestoreType: "timestamp", value });
+
+const collections = {
+  campaigns: "marketing_campaigns",
+  influencers: "marketing_influencers",
+  links: "short_links",
+};
+
+const buildInstagramUrl = (handle) =>
+  handle ? `https://www.instagram.com/${handle.replace(/^@/, "")}/` : null;
+
+const buildWhatsAppDestinationUrl = ({ couponCode, displayName }) => {
+  const message = `Oi! Vim pelo cupom ${couponCode} da ${displayName} e quero saber mais sobre as aulas da Langy.`;
+
+  return `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+};
+
+const influencers = [
+  {
+    id: "livia",
+    displayName: "Lívia",
+    internalLabel: "Lívia Pendente",
+    onboardingStatus: "pending_details",
+    defaultCouponCode: "LIVIA10",
+    defaultShortLinkSlug: "livia10",
+    socialProfiles: {
+      instagram: {
+        handle: "l.tessallya._",
+        status: "active",
+        url: buildInstagramUrl("l.tessallya._"),
+      },
+      tiktok: {
+        handle: "liviaa._arauujo",
+        status: "active",
+        url: "https://www.tiktok.com/@liviaa._arauujo",
+      },
+    },
+  },
+  {
+    id: "leticia",
+    displayName: "Letícia",
+    internalLabel: "Letícia",
+    onboardingStatus: "pending_socials",
+    defaultCouponCode: "LETICIA10",
+    defaultShortLinkSlug: "leticia10",
+    socialProfiles: {
+      instagram: {
+        handle: null,
+        status: "pending",
+        url: null,
+      },
+      tiktok: {
+        handle: null,
+        status: "pending",
+        url: null,
+      },
+    },
+  },
+  {
+    id: "clara",
+    displayName: "Clara",
+    internalLabel: "Clara",
+    onboardingStatus: "pending_details",
+    defaultCouponCode: "CLARA10",
+    defaultShortLinkSlug: "clara10",
+    socialProfiles: {
+      instagram: {
+        handle: "langy.space",
+        status: "active",
+        url: "https://www.instagram.com/langy.space/",
+      },
+      tiktok: {
+        handle: "langy.space",
+        status: "active",
+        url: "https://www.tiktok.com/@langy.space",
+      },
+    },
+  },
+];
+
+const getAccessToken = () =>
+  execFileSync("gcloud", ["auth", "print-access-token"], {
+    encoding: "utf8",
+  }).trim();
+
+const documentUrl = (collectionName, documentId) =>
+  `https://firestore.googleapis.com/v1/projects/${projectId}/databases/${databaseId}/documents/${collectionName}/${documentId}`;
+
+const toFirestoreValue = (value) => {
+  if (value?.__firestoreType === "timestamp") {
+    return { timestampValue: value.value };
+  }
+
+  if (value === null) {
+    return { nullValue: null };
+  }
+
+  if (typeof value === "boolean") {
+    return { booleanValue: value };
+  }
+
+  if (typeof value === "number") {
+    return Number.isInteger(value)
+      ? { integerValue: value.toString() }
+      : { doubleValue: value };
+  }
+
+  if (typeof value === "string") {
+    return { stringValue: value };
+  }
+
+  if (Array.isArray(value)) {
+    return {
+      arrayValue: {
+        values: value.map((item) => toFirestoreValue(item)),
+      },
+    };
+  }
+
+  return {
+    mapValue: {
+      fields: toFirestoreFields(value),
+    },
+  };
+};
+
+const toFirestoreFields = (data) =>
+  Object.entries(data).reduce((fields, [key, value]) => {
+    fields[key] = toFirestoreValue(value);
+
+    return fields;
+  }, {});
+
+const readExistingCreatedAt = async ({
+  accessToken,
+  collectionName,
+  documentId,
+}) => {
+  const response = await fetch(documentUrl(collectionName, documentId), {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to read ${collectionName}/${documentId}: ${response.status} ${await response.text()}`,
+    );
+  }
+
+  const document = await response.json();
+
+  return document.fields?.createdAt?.timestampValue ?? null;
+};
+
+const upsertDocument = async ({
+  accessToken,
+  collectionName,
+  documentId,
+  data,
+}) => {
+  const now = new Date().toISOString();
+  const existingCreatedAt = await readExistingCreatedAt({
+    accessToken,
+    collectionName,
+    documentId,
+  });
+
+  const response = await fetch(documentUrl(collectionName, documentId), {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fields: toFirestoreFields({
+        ...data,
+        createdAt: timestamp(existingCreatedAt ?? now),
+        updatedAt: timestamp(now),
+      }),
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to write ${collectionName}/${documentId}: ${response.status} ${await response.text()}`,
+    );
+  }
+
+  console.log(`Upserted ${collectionName}/${documentId}`);
+};
+
+const buildInfluencerDocument = (influencer) => ({
+  id: influencer.id,
+  displayName: influencer.displayName,
+  internalLabel: influencer.internalLabel,
+  onboardingStatus: influencer.onboardingStatus,
+  defaultCampaignId: campaignId,
+  defaultCampaignName: campaignName,
+  defaultCouponCode: influencer.defaultCouponCode,
+  defaultShortLinkSlug: influencer.defaultShortLinkSlug,
+  source: "influencer",
+  medium: "coupon",
+  socialProfiles: influencer.socialProfiles,
+  notes:
+    "Cadastro inicial criado antes de fechar todos os detalhes comerciais.",
+});
+
+const buildShortLinkDocument = (influencer) => ({
+  slug: influencer.defaultShortLinkSlug,
+  title: `Cupom ${influencer.displayName} 10`,
+  type: "whatsapp",
+  destinationUrl: buildWhatsAppDestinationUrl({
+    couponCode: influencer.defaultCouponCode,
+    displayName: influencer.displayName,
+  }),
+  couponCode: influencer.defaultCouponCode,
+  influencerId: influencer.id,
+  influencerName: influencer.displayName,
+  campaignId,
+  campaignName,
+  source: "influencer",
+  medium: "coupon",
+  active: true,
+});
+
+const main = async () => {
+  const accessToken = getAccessToken();
+
+  await upsertDocument({
+    accessToken,
+    collectionName: collections.campaigns,
+    documentId: campaignId,
+    data: {
+      id: campaignId,
+      name: campaignName,
+      status: "active",
+      channel: "influencer",
+      source: "influencer",
+      medium: "coupon",
+      defaultWhatsAppPhone: whatsappPhone,
+      notes: "Campanha inicial de cupons das embaixadoras Langy.space.",
+    },
+  });
+
+  for (const influencer of influencers) {
+    await upsertDocument({
+      accessToken,
+      collectionName: collections.influencers,
+      documentId: influencer.id,
+      data: buildInfluencerDocument(influencer),
+    });
+
+    await upsertDocument({
+      accessToken,
+      collectionName: collections.links,
+      documentId: influencer.defaultShortLinkSlug,
+      data: buildShortLinkDocument(influencer),
+    });
+  }
+};
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

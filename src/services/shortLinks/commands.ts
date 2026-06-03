@@ -21,11 +21,13 @@ export const recordShortLinkClick = async ({
   status,
 }: RecordShortLinkClickInput): Promise<void> => {
   await addDoc(collection(db, SHORT_LINK_CLICKS_COLLECTION), {
+    campaignId: link.campaignId,
     campaignName: link.campaignName,
     couponCode: link.couponCode,
     createdAt: serverTimestamp(),
     destinationUrl,
     fullUrl: clickContext.fullUrl,
+    influencerId: link.influencerId,
     influencerName: link.influencerName,
     linkTitle: link.title,
     medium: link.medium,

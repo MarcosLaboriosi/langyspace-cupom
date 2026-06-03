@@ -94,9 +94,89 @@ O app salva slug, campanha, cupom, influencer, tipo, destino, UTMs, user agent, 
 string e uma versao sanitizada da URL acessada. Ele nao salva IP cru, telefone, nome ou e-mail do
 lead.
 
+Quando o link tiver `campaignId` e `influencerId`, o clique tambem salva esses identificadores para
+ranking e relatorios futuros sem depender apenas do nome publico da influencer.
+
 Links inexistentes redirecionam para `https://langy.space` sem criar clique. Links inativos ou com
 destino invalido podem gerar clique com `status: "inactive"` ou `status: "invalid_destination"` e
 tambem redirecionam para `https://langy.space`.
+
+## Entidades de campanha
+
+Para manter o cadastro em nivel de producao, use tres camadas:
+
+- `marketing_campaigns/{campaignId}`: cadastro canônico da campanha, por exemplo
+  `marketing_campaigns/embaixadoras-2026`
+- `marketing_influencers/{influencerId}`: cadastro canônico da influencer, redes sociais, status de
+  onboarding e cupom padrao
+- `short_links/{slug}`: documento publico e leve usado pelo redirect
+
+O app publico so precisa ler `short_links/{slug}`. As colecoes `marketing_campaigns` e
+`marketing_influencers` ficam para painel, operacao, ranking e enriquecimento futuro.
+
+### Seed inicial das influencers
+
+O repo tem um seed operacional para criar/atualizar a campanha `Embaixadoras` e os links:
+
+- `livia10`
+- `leticia10`
+- `clara10`
+
+Rode com uma conta local autenticada no Google Cloud que tenha acesso ao projeto Firebase:
+
+```bash
+pnpm run seed:influencers
+```
+
+O seed preserva `createdAt` quando o documento ja existe e atualiza `updatedAt` a cada execucao.
+
+Campos principais em `marketing_influencers/{influencerId}`:
+
+```json
+{
+  "id": "livia",
+  "displayName": "Lívia",
+  "internalLabel": "Lívia Pendente",
+  "onboardingStatus": "pending_details",
+  "defaultCampaignId": "embaixadoras-2026",
+  "defaultCampaignName": "Embaixadoras",
+  "defaultCouponCode": "LIVIA10",
+  "defaultShortLinkSlug": "livia10",
+  "source": "influencer",
+  "medium": "coupon",
+  "socialProfiles": {
+    "instagram": {
+      "handle": "l.tessallya._",
+      "status": "active",
+      "url": "https://www.instagram.com/l.tessallya._/"
+    },
+    "tiktok": {
+      "handle": "liviaa._arauujo",
+      "status": "active",
+      "url": "https://www.tiktok.com/@liviaa._arauujo"
+    }
+  }
+}
+```
+
+Campos principais em `short_links/{slug}`:
+
+```json
+{
+  "slug": "livia10",
+  "title": "Cupom Lívia 10",
+  "type": "whatsapp",
+  "destinationUrl": "https://wa.me/5534997711070?text=...",
+  "couponCode": "LIVIA10",
+  "influencerId": "livia",
+  "influencerName": "Lívia",
+  "campaignId": "embaixadoras-2026",
+  "campaignName": "Embaixadoras",
+  "source": "influencer",
+  "medium": "coupon",
+  "active": true
+}
+```
 
 ## Desenvolvimento
 
@@ -133,6 +213,7 @@ Este app usa o mesmo Firestore dos outros apps da Langy.space. As regras compart
 
 - `get` publico em `short_links/{slug}`
 - `create` publico validado em `short_link_clicks/{clickId}`
+- `get/list` autenticado em `marketing_campaigns` e `marketing_influencers`
 - nenhum `update/delete` publico nessas colecoes
 
 Valide e publique as regras a partir de `../langyspace-teacher`:

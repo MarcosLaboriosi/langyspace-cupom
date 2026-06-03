@@ -71,9 +71,11 @@ export const mapShortLinkData = (
   data: Record<string, unknown>,
 ): ShortLinkModel => ({
   active: data.active === true,
+  campaignId: readString(data.campaignId, 120),
   campaignName: readString(data.campaignName),
   couponCode: readString(data.couponCode, 120),
   destinationUrl: readString(data.destinationUrl, 2000) ?? "",
+  influencerId: readString(data.influencerId, 120),
   influencerName: readString(data.influencerName, 180),
   medium: readString(data.medium, 120),
   slug,
