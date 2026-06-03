@@ -177,6 +177,10 @@ Campos principais em `short_links/{slug}`:
   "campaignName": "Embaixadoras",
   "source": "influencer",
   "medium": "coupon",
+  "discountLabel": "10% off no 1º mês",
+  "discountType": "percent",
+  "discountValue": 10,
+  "discountScope": "first_month",
   "active": true
 }
 ```

@@ -32,6 +32,11 @@ const influencers = [
     onboardingStatus: "pending_student_link",
     studentAccountStatus: "not_created",
     studentId: null,
+    discount: {
+      label: "10% off no 1º mês",
+      type: "percent",
+      value: 10,
+    },
     defaultCouponCode: "LIVIA10",
     defaultShortLinkSlug: "livia10",
     socialProfiles: {
@@ -55,6 +60,11 @@ const influencers = [
     onboardingStatus: "pending_instagram",
     studentAccountStatus: "linked",
     studentId: "4MaNt8JjSL8fK2aveVJs",
+    discount: {
+      label: "10% off no 1º mês",
+      type: "percent",
+      value: 10,
+    },
     defaultCouponCode: "LETICIA10",
     defaultShortLinkSlug: "leticia10",
     socialProfiles: {
@@ -78,6 +88,11 @@ const influencers = [
     onboardingStatus: "pending_full_name",
     studentAccountStatus: "not_created",
     studentId: null,
+    discount: {
+      label: "10% off no 1º mês",
+      type: "percent",
+      value: 10,
+    },
     defaultCouponCode: "CLARA10",
     defaultShortLinkSlug: "clara10",
     socialProfiles: {
@@ -245,6 +260,10 @@ const buildShortLinkDocument = (influencer) => ({
   campaignName,
   source: "influencer",
   medium: "coupon",
+  discountLabel: influencer.discount.label,
+  discountType: influencer.discount.type,
+  discountValue: influencer.discount.value,
+  discountScope: "first_month",
   active: true,
 });
 
