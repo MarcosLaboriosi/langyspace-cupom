@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import logoWhiteSrc from "@/assets/horizontal-logo-white.svg";
 import {
   CLICK_WRITE_TIMEOUT_MS,
   FALLBACK_REDIRECT_URL,
@@ -80,14 +81,22 @@ export const CouponRedirectPage = () => {
   }, []);
 
   return (
-    <main className="coupon-page" aria-live="polite">
-      <section className="coupon-panel">
-        <div className="coupon-mark" aria-hidden="true">
-          <span />
+    <main className="coupon-splash">
+      <section
+        className="coupon-splash__content"
+        aria-label={REDIRECT_TITLE}
+        aria-live="polite"
+        role="status"
+      >
+        <div className="coupon-splash__logo-wrap">
+          <img
+            className="coupon-splash__logo"
+            alt="Langy.space"
+            src={logoWhiteSrc}
+          />
         </div>
-        <p className="coupon-eyebrow">langy.space</p>
-        <h1>{REDIRECT_TITLE}</h1>
-        <p>{REDIRECT_DESCRIPTION}</p>
+        <h1 className="coupon-sr-only">{REDIRECT_TITLE}</h1>
+        <p className="coupon-sr-only">{REDIRECT_DESCRIPTION}</p>
       </section>
     </main>
   );
