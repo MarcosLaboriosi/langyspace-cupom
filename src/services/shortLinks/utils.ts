@@ -140,22 +140,35 @@ export const buildRedirectDestination = (
   link: ShortLinkModel,
   utmParams: UtmParams,
 ) => {
-  if (!siteRedirectTypes.has(link.type) || !hasUtmParams(utmParams)) {
+  if (!siteRedirectTypes.has(link.type)) {
     return link.destinationUrl;
   }
 
   try {
     const destinationUrl = new URL(link.destinationUrl);
+    let hasAddedParams = false;
 
-    utmKeys.forEach((key) => {
-      const value = utmParams[key];
+    if (hasUtmParams(utmParams)) {
+      utmKeys.forEach((key) => {
+        const value = utmParams[key];
 
-      if (value && !destinationUrl.searchParams.has(key)) {
-        destinationUrl.searchParams.set(key, value);
-      }
-    });
+        if (value && !destinationUrl.searchParams.has(key)) {
+          destinationUrl.searchParams.set(key, value);
+          hasAddedParams = true;
+        }
+      });
+    }
 
-    return destinationUrl.toString();
+    if (
+      link.type === "checkout" &&
+      link.couponCode &&
+      !destinationUrl.searchParams.has("couponCode")
+    ) {
+      destinationUrl.searchParams.set("couponCode", link.couponCode);
+      hasAddedParams = true;
+    }
+
+    return hasAddedParams ? destinationUrl.toString() : link.destinationUrl;
   } catch {
     return link.destinationUrl;
   }

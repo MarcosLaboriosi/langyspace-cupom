@@ -17,6 +17,7 @@ Standalone React + Firebase app for `cupom.langy.space`.
 ## commands
 
 - Dev server: `pnpm dev`
+- Unit tests: `pnpm test`
 - Production build/type check: `pnpm run build`
 - Preview production build: `pnpm run preview`
 - Deploy Hosting: `pnpm run deploy`
