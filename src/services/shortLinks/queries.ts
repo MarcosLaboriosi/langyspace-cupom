@@ -1,17 +1,29 @@
-import { doc, getDoc } from "firebase/firestore/lite";
-import { SHORT_LINKS_COLLECTION } from "@/config/constants";
-import { db } from "@/lib/firebase/firestore";
-import { mapShortLinkData } from "./utils";
-import type { ShortLinkModel } from "./types";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "@/lib/firebase/functions";
+import type {
+  ClickContext,
+  ResolveShortLinkRedirectInput,
+  ResolveShortLinkRedirectResult,
+} from "./types";
 
-export const getShortLink = async (
+const resolveShortLinkRedirectCallable = httpsCallable<
+  ResolveShortLinkRedirectInput,
+  ResolveShortLinkRedirectResult
+>(functions, "resolveShortLinkRedirect");
+
+export const resolveShortLinkRedirect = async (
   slug: string,
-): Promise<ShortLinkModel | null> => {
-  const snapshot = await getDoc(doc(db, SHORT_LINKS_COLLECTION, slug));
+  clickContext: ClickContext,
+): Promise<string> => {
+  const response = await resolveShortLinkRedirectCallable({
+    clickContext,
+    slug,
+  });
+  const destinationUrl = response.data.destinationUrl;
 
-  if (!snapshot.exists()) {
-    return null;
+  if (typeof destinationUrl !== "string" || destinationUrl.length === 0) {
+    throw new Error("Invalid short link redirect response");
   }
 
-  return mapShortLinkData(slug, snapshot.data());
+  return destinationUrl;
 };

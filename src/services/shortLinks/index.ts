@@ -1,7 +1,8 @@
-export { recordShortLinkClick } from "./commands";
-export { getShortLink } from "./queries";
+export { resolveShortLinkRedirect } from "./queries";
 export type {
   ClickContext,
+  ResolveShortLinkRedirectInput,
+  ResolveShortLinkRedirectResult,
   ShortLinkClickModel,
   ShortLinkClickStatus,
   ShortLinkModel,

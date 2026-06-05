@@ -4,12 +4,13 @@ Standalone React + Firebase app for `cupom.langy.space`.
 
 ## quick facts
 
-- Stack: React, TypeScript, Vite, Firebase Hosting, Firestore.
+- Stack: React, TypeScript, Vite, Firebase Hosting, Firebase Functions, Firestore.
 - Package manager: `pnpm`.
 - Firebase project: `langyspace-564b5`.
 - Hosting target/site: `cupom` mapped to `langyspace-cupom`.
 - The app is public and has no login.
-- Do not add Cloud Functions to the MVP.
+- Public redirects must resolve through the shared `langyspace-teacher` auth Functions codebase,
+  not through direct client reads from `short_links`.
 - Shared Firestore rules for `short_links` and `short_link_clicks` currently live in
   `../langyspace-teacher/firestore.rules` because the Firestore database is shared with the existing
   Langy.space apps.
@@ -24,12 +25,12 @@ Standalone React + Firebase app for `cupom.langy.space`.
 
 ## workflow
 
-Keep the app small. The redirect destination must come from `short_links/{slug}.destinationUrl`;
-do not hardcode coupon destinations in source code.
+Keep the app small. The redirect destination must come from `short_links/{slug}.destinationUrl`
+through the `resolveShortLinkRedirect` callable; do not hardcode coupon destinations in source code.
 
-Do not save raw IP, lead name, lead phone, lead email, or sensitive personal data. The click payload
-may save campaign fields, UTMs, sanitized referrer, sanitized full URL, pathname, user agent, and
-timestamp.
+Do not save raw IP, lead name, lead phone, lead email, or sensitive personal data. Click payloads are
+written server-side and may save campaign fields, UTMs, sanitized referrer, sanitized full URL,
+pathname, user agent, and timestamp.
 
 When Firestore rules need to change, update `../langyspace-teacher/firestore.rules` and validate
 from that repo with `pnpm run rules:check`.

@@ -46,6 +46,15 @@ export interface ClickContext extends UtmParams {
   userAgent: string;
 }
 
+export interface ResolveShortLinkRedirectInput {
+  clickContext: ClickContext;
+  slug: string;
+}
+
+export interface ResolveShortLinkRedirectResult {
+  destinationUrl: string;
+}
+
 export interface ShortLinkClickModel extends ClickContext {
   campaignId: string | null;
   campaignName: string | null;
