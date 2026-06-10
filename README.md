@@ -3,8 +3,9 @@
 Mini app publico de redirecionamento de cupons da Langy.space, previsto para
 `https://cupom.langy.space`.
 
-Ele roda em `cupom.langy.space`, le o slug da URL, busca `short_links/{slug}` no Firestore, registra
-um clique em `short_link_clicks` e redireciona para `destinationUrl`.
+Ele roda em `cupom.langy.space`, le o slug da URL, chama a callable
+`resolveShortLinkRedirect`, registra um clique em `short_link_clicks` no backend e redireciona para
+o destino retornado.
 
 ## Como cadastrar um link
 
@@ -13,7 +14,7 @@ Crie manualmente um documento no Firestore:
 - Colecao: `short_links`
 - Documento: o slug em lowercase, por exemplo `livia10`
 
-### Cupom de influencer para WhatsApp
+### Cupom de influencer para cadastro
 
 Documento: `livia10`
 
@@ -21,8 +22,8 @@ Documento: `livia10`
 {
   "slug": "livia10",
   "title": "Cupom Lívia 10",
-  "type": "whatsapp",
-  "destinationUrl": "https://wa.me/5534997711070?text=Oi%21%20Vim%20pelo%20cupom%20LIVIA10%20e%20quero%20saber%20mais%20sobre%20as%20aulas%20da%20Langy.",
+  "type": "checkout",
+  "destinationUrl": "https://student.langy.space/registration",
   "couponCode": "LIVIA10",
   "influencerName": "Lívia",
   "campaignName": "Embaixadoras",
@@ -31,6 +32,10 @@ Documento: `livia10`
   "active": true
 }
 ```
+
+Para links do tipo `checkout`, o backend preserva UTMs e adiciona `couponCode` ao destino quando o
+campo `couponCode` existe no documento. O exemplo acima redireciona para
+`https://student.langy.space/registration?couponCode=LIVIA10`.
 
 ### Link direto ao site
 
@@ -85,6 +90,7 @@ O redirecionamento sempre usa `destinationUrl`. Esse campo precisa comecar com `
 
 Links de WhatsApp nao recebem UTMs automaticamente. Links do tipo `website`, `landing_page`, `form`
 e `checkout` preservam UTMs no destino quando elas existem e ainda nao estao no `destinationUrl`.
+Links do tipo `checkout` tambem adicionam o `couponCode` ao destino quando o documento tiver cupom.
 
 ## Metricas
 
@@ -109,9 +115,10 @@ Para manter o cadastro em nivel de producao, use tres camadas:
   `marketing_campaigns/embaixadoras-2026`
 - `marketing_influencers/{influencerId}`: cadastro canônico da influencer, redes sociais, status de
   onboarding e cupom padrao
-- `short_links/{slug}`: documento publico e leve usado pelo redirect
+- `short_links/{slug}`: documento leve usado pelo redirect server-side
 
-O app publico so precisa ler `short_links/{slug}`. As colecoes `marketing_campaigns` e
+O app publico chama a callable de redirect. A leitura de `short_links/{slug}` e a escrita de
+`short_link_clicks` acontecem no backend. As colecoes `marketing_campaigns` e
 `marketing_influencers` ficam para painel, operacao, ranking e enriquecimento futuro.
 
 ### Seed inicial das influencers
@@ -168,8 +175,8 @@ Campos principais em `short_links/{slug}`:
 {
   "slug": "livia10",
   "title": "Cupom Lívia 10",
-  "type": "whatsapp",
-  "destinationUrl": "https://wa.me/5534997711070?text=...",
+  "type": "checkout",
+  "destinationUrl": "https://student.langy.space/registration",
   "couponCode": "LIVIA10",
   "influencerId": "livia",
   "influencerName": "Lívia",
@@ -216,10 +223,11 @@ Hosting.
 ## Firestore Rules
 
 Este app usa o mesmo Firestore dos outros apps da Langy.space. As regras compartilhadas ficam em
-`../langyspace-teacher/firestore.rules` e precisam permitir:
+`../langyspace-teacher/firestore.rules` e o redirect publico deve passar pela callable
+`resolveShortLinkRedirect`.
 
-- `get` publico em `short_links/{slug}`
-- `create` publico validado em `short_link_clicks/{clickId}`
+- `get/list` de `short_links` restrito a professor/backoffice
+- `create` publico bloqueado em `short_link_clicks`; a callable registra os cliques pelo backend
 - `get/list` autenticado em `marketing_campaigns` e `marketing_influencers`
 - nenhum `update/delete` publico nessas colecoes
 

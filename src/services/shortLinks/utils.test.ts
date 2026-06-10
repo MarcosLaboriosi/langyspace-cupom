@@ -17,7 +17,7 @@ const createLink = (
   campaignId: null,
   campaignName: null,
   couponCode: null,
-  destinationUrl: "https://student.langy.space/escolher-plano",
+  destinationUrl: "https://student.langy.space/registration",
   influencerId: null,
   influencerName: null,
   medium: null,
@@ -37,7 +37,7 @@ describe("buildRedirectDestination", () => {
         }),
         emptyUtmParams,
       ),
-    ).toBe("https://student.langy.space/escolher-plano?couponCode=LETICIA10");
+    ).toBe("https://student.langy.space/registration?couponCode=LETICIA10");
   });
 
   it("keeps an existing couponCode on checkout links", () => {
@@ -46,11 +46,11 @@ describe("buildRedirectDestination", () => {
         createLink({
           couponCode: "LETICIA10",
           destinationUrl:
-            "https://student.langy.space/escolher-plano?couponCode=CLARA10",
+            "https://student.langy.space/registration?couponCode=CLARA10",
         }),
         emptyUtmParams,
       ),
-    ).toBe("https://student.langy.space/escolher-plano?couponCode=CLARA10");
+    ).toBe("https://student.langy.space/registration?couponCode=CLARA10");
   });
 
   it("adds UTMs and couponCode to checkout links", () => {
@@ -66,7 +66,7 @@ describe("buildRedirectDestination", () => {
         },
       ),
     ).toBe(
-      "https://student.langy.space/escolher-plano?utm_source=tiktok&utm_campaign=embaixadoras-2026&couponCode=LETICIA10",
+      "https://student.langy.space/registration?utm_source=tiktok&utm_campaign=embaixadoras-2026&couponCode=LETICIA10",
     );
   });
 
@@ -79,6 +79,6 @@ describe("buildRedirectDestination", () => {
         }),
         emptyUtmParams,
       ),
-    ).toBe("https://student.langy.space/escolher-plano");
+    ).toBe("https://student.langy.space/registration");
   });
 });
