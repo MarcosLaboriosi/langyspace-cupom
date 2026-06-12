@@ -21,7 +21,7 @@ interface CouponMetricsPageProps {
 }
 
 export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
-  const [rangeDays, setRangeDays] = useState<ShortLinkMetricsRangeDays>(30);
+  const [rangeDays, setRangeDays] = useState<ShortLinkMetricsRangeDays>(7);
   const [metrics, setMetrics] = useState<GetShortLinkMetricsResult | null>(
     null,
   );
@@ -64,7 +64,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
   const pageTitle = metrics?.link.title ?? "Relatório de cupom";
   const pageMeta = metrics?.link.couponCode
     ? `${metrics.link.couponCode} · ${metrics.link.campaignName ?? "campanha"}`
-    : "relatório público";
+    : "";
   const kpis = metrics
     ? [
         {
@@ -106,7 +106,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
           <div className="coupon-report__heading">
             <p className="coupon-report__eyebrow">relatório de cupom</p>
             <h1>{pageTitle}</h1>
-            <p>{pageMeta}</p>
+            {pageMeta ? <p>{pageMeta}</p> : null}
           </div>
           <div className="coupon-report__ranges" aria-label="Período">
             {rangeOptions.map((option) => (
