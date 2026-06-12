@@ -53,6 +53,7 @@ export interface ResolveShortLinkRedirectInput {
 
 export interface ResolveShortLinkRedirectResult {
   destinationUrl: string;
+  shortLinkClickId?: string;
 }
 
 export interface ShortLinkClickModel extends ClickContext {
@@ -69,4 +70,79 @@ export interface ShortLinkClickModel extends ClickContext {
   source: string | null;
   status: ShortLinkClickStatus;
   type: ShortLinkType;
+}
+
+export type ShortLinkMetricsRangeDays = 7 | 30 | 90;
+
+export interface GetShortLinkMetricsInput {
+  rangeDays?: ShortLinkMetricsRangeDays;
+  slug: string;
+}
+
+export interface ShortLinkMetricsLink {
+  active: boolean;
+  campaignId: string | null;
+  campaignName: string | null;
+  couponCode: string | null;
+  influencerId: string | null;
+  influencerName: string | null;
+  slug: string;
+  title: string;
+  type: ShortLinkType;
+}
+
+export interface ShortLinkMetricsFunnel {
+  clickToEnrollmentRate: number;
+  clickToPaymentViewRate: number;
+  clicks: number;
+  enrollments: number;
+  paymentViewToEnrollmentRate: number;
+  paymentViews: number;
+}
+
+export interface ShortLinkMetricsDailyItem {
+  clicks: number;
+  date: string;
+  enrollments: number;
+  paymentViews: number;
+}
+
+export interface ShortLinkMetricsTopItem {
+  count: number;
+  label: string;
+}
+
+export interface ShortLinkMetricsDetails {
+  attribution: {
+    exactEnrollments: number;
+    exactPaymentViews: number;
+    fallbackEnrollments: number;
+    fallbackPaymentViews: number;
+  };
+  eventBreakdown: Partial<
+    Record<
+      | "checkout_created"
+      | "payment_viewed"
+      | "payment_confirmed"
+      | "subscription_created",
+      number
+    >
+  >;
+  statusBreakdown: Record<string, number>;
+  topReferrers: ShortLinkMetricsTopItem[];
+  topUtms: {
+    campaign: ShortLinkMetricsTopItem[];
+    content: ShortLinkMetricsTopItem[];
+    medium: ShortLinkMetricsTopItem[];
+    source: ShortLinkMetricsTopItem[];
+    term: ShortLinkMetricsTopItem[];
+  };
+}
+
+export interface GetShortLinkMetricsResult {
+  daily: ShortLinkMetricsDailyItem[];
+  details: ShortLinkMetricsDetails;
+  funnel: ShortLinkMetricsFunnel;
+  link: ShortLinkMetricsLink;
+  rangeDays: ShortLinkMetricsRangeDays;
 }

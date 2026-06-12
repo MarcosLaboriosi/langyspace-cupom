@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
-import { CouponRedirectPage } from "./pages/CouponRedirectPage";
+import { App } from "./App";
 import "./pages/CouponRedirectPage/styles.css";
+import "./pages/CouponMetricsPage/styles.css";
 
-createRoot(document.getElementById("root")!).render(<CouponRedirectPage />);
+createRoot(document.getElementById("root")!).render(<App />);

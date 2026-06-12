@@ -4,7 +4,7 @@ const projectId = "langyspace-564b5";
 const databaseId = "(default)";
 const campaignId = "embaixadoras-2026";
 const campaignName = "Embaixadoras";
-const registrationUrl = "https://student.langy.space/registration";
+const langyWhatsappNumber = "5534997711070";
 
 const timestamp = (value) => ({ __firestoreType: "timestamp", value });
 
@@ -17,6 +17,12 @@ const collections = {
 const buildInstagramUrl = (handle) =>
   handle ? `https://www.instagram.com/${handle.replace(/^@/, "")}/` : null;
 
+const buildInfluencerWhatsappUrl = (influencer) => {
+  const message = `Oi, Langy.space! Vim pela influencer ${influencer.displayName} e queria usar o cupom ${influencer.defaultCouponCode}.`;
+
+  return `https://wa.me/${langyWhatsappNumber}?text=${encodeURIComponent(message)}`;
+};
+
 const influencers = [
   {
     id: "livia",
@@ -27,7 +33,7 @@ const influencers = [
     studentAccountStatus: "not_created",
     studentId: null,
     discount: {
-      label: "10% off no 1º mês",
+      label: "10% off todos os meses",
       type: "percent",
       value: 10,
     },
@@ -55,7 +61,7 @@ const influencers = [
     studentAccountStatus: "linked",
     studentId: "4MaNt8JjSL8fK2aveVJs",
     discount: {
-      label: "10% off no 1º mês",
+      label: "10% off todos os meses",
       type: "percent",
       value: 10,
     },
@@ -83,7 +89,7 @@ const influencers = [
     studentAccountStatus: "not_created",
     studentId: null,
     discount: {
-      label: "10% off no 1º mês",
+      label: "10% off todos os meses",
       type: "percent",
       value: 10,
     },
@@ -99,6 +105,34 @@ const influencers = [
         handle: "langy.space",
         status: "active",
         url: "https://www.tiktok.com/@langy.space",
+      },
+    },
+  },
+  {
+    id: "emysuelle",
+    displayName: "Emilly Suellen",
+    fullName: "Emilly Suellen",
+    internalLabel: "Emilly Suellen",
+    onboardingStatus: "pending_instagram",
+    studentAccountStatus: "linked",
+    studentId: "cCNIhxCd19OHNM78jX6i",
+    discount: {
+      label: "10% off todos os meses",
+      type: "percent",
+      value: 10,
+    },
+    defaultCouponCode: "EMY10",
+    defaultShortLinkSlug: "emy10",
+    socialProfiles: {
+      instagram: {
+        handle: null,
+        status: "pending",
+        url: null,
+      },
+      tiktok: {
+        handle: "emysuelle",
+        status: "active",
+        url: "https://www.tiktok.com/@emysuelle",
       },
     },
   },
@@ -242,8 +276,8 @@ const buildInfluencerDocument = (influencer) => ({
 const buildShortLinkDocument = (influencer) => ({
   slug: influencer.defaultShortLinkSlug,
   title: `Cupom ${influencer.displayName} 10`,
-  type: "checkout",
-  destinationUrl: registrationUrl,
+  type: "whatsapp",
+  destinationUrl: buildInfluencerWhatsappUrl(influencer),
   couponCode: influencer.defaultCouponCode,
   influencerId: influencer.id,
   influencerName: influencer.displayName,
@@ -254,7 +288,7 @@ const buildShortLinkDocument = (influencer) => ({
   discountLabel: influencer.discount.label,
   discountType: influencer.discount.type,
   discountValue: influencer.discount.value,
-  discountScope: "first_month",
+  discountScope: "all_months",
   active: true,
 });
 
@@ -272,9 +306,9 @@ const main = async () => {
       channel: "influencer",
       source: "influencer",
       medium: "coupon",
-      defaultRegistrationUrl: registrationUrl,
+      defaultWhatsappNumber: langyWhatsappNumber,
       notes:
-        "Campanha inicial de cupons das embaixadoras Langy.space com redirect para cadastro.",
+        "Campanha inicial de cupons das embaixadoras Langy.space com redirect para WhatsApp.",
     },
   });
 

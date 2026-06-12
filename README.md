@@ -14,7 +14,7 @@ Crie manualmente um documento no Firestore:
 - Colecao: `short_links`
 - Documento: o slug em lowercase, por exemplo `livia10`
 
-### Cupom de influencer para cadastro
+### Cupom de influencer para WhatsApp
 
 Documento: `livia10`
 
@@ -22,8 +22,8 @@ Documento: `livia10`
 {
   "slug": "livia10",
   "title": "Cupom Lívia 10",
-  "type": "checkout",
-  "destinationUrl": "https://student.langy.space/registration",
+  "type": "whatsapp",
+  "destinationUrl": "https://wa.me/5534997711070?text=Oi%2C%20Langy.space!%20Vim%20pela%20influencer%20L%C3%ADvia%20e%20queria%20usar%20o%20cupom%20LIVIA10.",
   "couponCode": "LIVIA10",
   "influencerName": "Lívia",
   "campaignName": "Embaixadoras",
@@ -33,9 +33,12 @@ Documento: `livia10`
 }
 ```
 
+O exemplo acima redireciona para o WhatsApp da Langy.space com uma mensagem que identifica a
+influencer e o cupom. O `couponCode` continua no documento para métricas, validação comercial e
+relatórios.
+
 Para links do tipo `checkout`, o backend preserva UTMs e adiciona `couponCode` ao destino quando o
-campo `couponCode` existe no documento. O exemplo acima redireciona para
-`https://student.langy.space/registration?couponCode=LIVIA10`.
+campo `couponCode` existe no documento.
 
 ### Link direto ao site
 
@@ -100,6 +103,29 @@ O app salva slug, campanha, cupom, influencer, tipo, destino, UTMs, user agent, 
 string e uma versao sanitizada da URL acessada. Ele nao salva IP cru, telefone, nome ou e-mail do
 lead.
 
+O painel publico de acompanhamento fica em:
+
+```text
+https://cupom.langy.space/relatorio/<slug>
+```
+
+Exemplo:
+
+```text
+https://cupom.langy.space/relatorio/livia10
+```
+
+Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` e mostra apenas
+dados agregados e sanitizados: cliques, visualizacoes da tela de pagamento, matriculas realizadas,
+taxas de conversao, serie diaria, status dos cliques, UTMs e dominios de referrer. Ela nao le
+Firestore direto no cliente e nao mostra nome, telefone, e-mail, IP, user agent bruto nem URL
+completa.
+
+Para atribuicao completa, `resolveShortLinkRedirect` adiciona `shortLinkClickId` e `shortLinkSlug`
+em destinos first-party como `student.langy.space`. O app de aluno preserva esses parametros ate o
+checkout e registra o evento `payment_viewed` antes de abrir o Asaas. Dados antigos sem
+`shortLinkClickId` podem aparecer como fallback agregado por `couponCode`.
+
 Quando o link tiver `campaignId` e `influencerId`, o clique tambem salva esses identificadores para
 ranking e relatorios futuros sem depender apenas do nome publico da influencer.
 
@@ -128,6 +154,7 @@ O repo tem um seed operacional para criar/atualizar a campanha `Embaixadoras` e 
 - `livia10`
 - `leticia10`
 - `clara10`
+- `emy10`
 
 Rode com uma conta local autenticada no Google Cloud que tenha acesso ao projeto Firebase:
 
@@ -175,8 +202,8 @@ Campos principais em `short_links/{slug}`:
 {
   "slug": "livia10",
   "title": "Cupom Lívia 10",
-  "type": "checkout",
-  "destinationUrl": "https://student.langy.space/registration",
+  "type": "whatsapp",
+  "destinationUrl": "https://wa.me/5534997711070?text=Oi%2C%20Langy.space!%20Vim%20pela%20influencer%20L%C3%ADvia%20e%20queria%20usar%20o%20cupom%20LIVIA10.",
   "couponCode": "LIVIA10",
   "influencerId": "livia",
   "influencerName": "Lívia",
@@ -184,10 +211,10 @@ Campos principais em `short_links/{slug}`:
   "campaignName": "Embaixadoras",
   "source": "influencer",
   "medium": "coupon",
-  "discountLabel": "10% off no 1º mês",
+  "discountLabel": "10% off todos os meses",
   "discountType": "percent",
   "discountValue": 10,
-  "discountScope": "first_month",
+  "discountScope": "all_months",
   "active": true
 }
 ```

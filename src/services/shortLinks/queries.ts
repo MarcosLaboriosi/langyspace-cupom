@@ -2,14 +2,22 @@ import { httpsCallable } from "firebase/functions";
 import { functions } from "@/lib/firebase/functions";
 import type {
   ClickContext,
+  GetShortLinkMetricsInput,
+  GetShortLinkMetricsResult,
   ResolveShortLinkRedirectInput,
   ResolveShortLinkRedirectResult,
+  ShortLinkMetricsRangeDays,
 } from "./types";
 
 const resolveShortLinkRedirectCallable = httpsCallable<
   ResolveShortLinkRedirectInput,
   ResolveShortLinkRedirectResult
 >(functions, "resolveShortLinkRedirect");
+
+const getShortLinkMetricsCallable = httpsCallable<
+  GetShortLinkMetricsInput,
+  GetShortLinkMetricsResult
+>(functions, "getShortLinkMetrics");
 
 export const resolveShortLinkRedirect = async (
   slug: string,
@@ -26,4 +34,16 @@ export const resolveShortLinkRedirect = async (
   }
 
   return destinationUrl;
+};
+
+export const getShortLinkMetrics = async (
+  slug: string,
+  rangeDays?: ShortLinkMetricsRangeDays,
+): Promise<GetShortLinkMetricsResult> => {
+  const response = await getShortLinkMetricsCallable({
+    rangeDays,
+    slug,
+  });
+
+  return response.data;
 };
