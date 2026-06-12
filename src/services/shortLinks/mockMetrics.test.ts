@@ -9,8 +9,10 @@ describe("demo short link metrics", () => {
     expect(demoShortLinkMetricsReportId).toBe("rpt_DudaDemo9Xc4Pn7");
   });
 
-  it("returns a high-volume Duda campaign for public examples", () => {
+  it("returns a high-click Duda campaign with fewer than 150 enrollments", () => {
+    const shortRangeMetrics = getDemoShortLinkMetrics(7);
     const metrics = getDemoShortLinkMetrics(30);
+    const longRangeMetrics = getDemoShortLinkMetrics(90);
 
     expect(metrics.link.influencerName).toBe("Duda");
     expect(metrics.link.couponCode).toBe("DUDA10");
@@ -18,8 +20,14 @@ describe("demo short link metrics", () => {
     expect(metrics.rangeDays).toBe(30);
     expect(metrics.daily).toHaveLength(30);
     expect(metrics.funnel.clicks).toBeGreaterThan(30_000);
-    expect(metrics.funnel.paymentViews).toBeGreaterThan(5_000);
-    expect(metrics.funnel.enrollments).toBeGreaterThan(2_000);
+    expect(metrics.funnel.enrollments).toBeGreaterThan(40);
+    expect(metrics.funnel.enrollments).toBeLessThan(150);
+    expect(metrics.funnel.enrollments % 10).not.toBe(0);
+    expect(shortRangeMetrics.funnel.enrollments).toBeLessThan(150);
+    expect(shortRangeMetrics.funnel.enrollments % 10).not.toBe(0);
+    expect(longRangeMetrics.funnel.clicks).toBeGreaterThan(100_000);
+    expect(longRangeMetrics.funnel.enrollments).toBeLessThan(150);
+    expect(longRangeMetrics.funnel.enrollments % 10).not.toBe(0);
     expect(metrics.details.topUtms.content).toHaveLength(5);
     expect(metrics.details.topRegions.length).toBeGreaterThanOrEqual(5);
     expect(metrics.details.clickHeatmap.length).toBeGreaterThanOrEqual(6);

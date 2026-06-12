@@ -36,7 +36,8 @@ const buildDailyItems = (
   rangeDays: ShortLinkMetricsRangeDays,
 ): ShortLinkMetricsDailyItem[] => {
   const now = new Date();
-  const rangeScale = rangeDays === 7 ? 1.35 : rangeDays === 30 ? 1 : 0.62;
+  const rangeScale = rangeDays === 7 ? 1.26 : rangeDays === 30 ? 1 : 0.68;
+  const dailyGrowth = rangeDays === 7 ? 22 : rangeDays === 30 ? 15.5 : 8.2;
 
   return Array.from({ length: rangeDays }, (_, index) => {
     const date = new Date(now.getTime() - (rangeDays - index - 1) * dayInMs);
@@ -44,23 +45,28 @@ const buildDailyItems = (
     const launchLift = index > rangeDays * 0.68 ? 1.32 : 1;
     const weekendLift = index % 7 === 5 || index % 7 === 6 ? 1.18 : 1;
     const clicks = Math.round(
-      (980 * rangeScale + index * 18) * wave * launchLift * weekendLift,
+      (820 * rangeScale + index * dailyGrowth) *
+        wave *
+        launchLift *
+        weekendLift,
     );
-    const registrationViews = Math.round(clicks * (0.72 - (index % 4) * 0.018));
+    const registrationViews = Math.round(
+      clicks * (0.155 - (index % 4) * 0.006),
+    );
     const accountCreations = Math.round(
-      registrationViews * (0.63 + (index % 3) * 0.025),
+      registrationViews * (0.29 + (index % 3) * 0.014),
     );
     const checkoutStarts = Math.round(
-      accountCreations * (0.74 - (index % 5) * 0.018),
+      accountCreations * (0.16 - (index % 5) * 0.004),
     );
     const paymentViews = Math.round(
-      checkoutStarts * (0.82 + (index % 4) * 0.012),
+      checkoutStarts * (0.52 + (index % 4) * 0.01),
     );
     const paymentsConfirmed = Math.round(
-      paymentViews * (0.48 + (index % 5) * 0.025),
+      paymentViews * (0.34 + (index % 5) * 0.012),
     );
     const enrollments = Math.round(
-      paymentsConfirmed * (0.86 + (index % 3) * 0.02),
+      paymentsConfirmed * (0.805 + (index % 3) * 0.02),
     );
 
     return {
