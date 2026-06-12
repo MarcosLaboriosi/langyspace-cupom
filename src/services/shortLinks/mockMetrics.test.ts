@@ -6,17 +6,17 @@ import {
 
 describe("demo short link metrics", () => {
   it("uses a synthetic report id for the public example", () => {
-    expect(demoShortLinkMetricsReportId).toBe("rpt_DudaDemo9Xc4Pn7");
+    expect(demoShortLinkMetricsReportId).toBe("rpt_ClaraDemo9Xc4Pn7");
   });
 
-  it("returns a high-click Duda campaign with fewer than 150 enrollments", () => {
+  it("returns a high-click Clara campaign with fewer than 150 enrollments", () => {
     const shortRangeMetrics = getDemoShortLinkMetrics(7);
     const metrics = getDemoShortLinkMetrics(30);
     const longRangeMetrics = getDemoShortLinkMetrics(90);
 
-    expect(metrics.link.influencerName).toBe("Duda");
-    expect(metrics.link.couponCode).toBe("DUDA10");
-    expect(metrics.link.slug).toBe("duda10");
+    expect(metrics.link.influencerName).toBe("Clara");
+    expect(metrics.link.couponCode).toBe("CLARA10");
+    expect(metrics.link.slug).toBe("clara10");
     expect(metrics.rangeDays).toBe(30);
     expect(metrics.daily).toHaveLength(30);
     expect(metrics.funnel.clicks).toBeGreaterThan(30_000);

@@ -5,7 +5,7 @@ import type {
   ShortLinkMetricsTopItem,
 } from "./types";
 
-export const demoShortLinkMetricsReportId = "rpt_DudaDemo9Xc4Pn7";
+export const demoShortLinkMetricsReportId = "rpt_ClaraDemo9Xc4Pn7";
 
 const dayInMs = 24 * 60 * 60 * 1000;
 
@@ -197,8 +197,8 @@ export const getDemoShortLinkMetrics = (
       topUtms: {
         campaign: scaleTopItems(
           [
-            { label: "campanha-duda-demo-2026", weight: 0.82 },
-            { label: "remarketing-duda-demo", weight: 0.18 },
+            { label: "campanha-clara-demo-2026", weight: 0.82 },
+            { label: "remarketing-clara-demo", weight: 0.18 },
           ],
           clicks,
         ),
@@ -257,15 +257,15 @@ export const getDemoShortLinkMetrics = (
     },
     link: {
       active: true,
-      campaignId: "campanha-duda-demo-2026",
-      campaignName: "Campanha Duda Demo",
-      couponCode: "DUDA10",
+      campaignId: "campanha-clara-demo-2026",
+      campaignName: "Campanha Clara Demo",
+      couponCode: "CLARA10",
       discountLabel: "10% off todos os meses",
       id: demoShortLinkMetricsReportId,
-      influencerId: "duda-demo",
-      influencerName: "Duda",
-      slug: "duda10",
-      title: "Campanha Duda 10",
+      influencerId: "clara-demo",
+      influencerName: "Clara",
+      slug: "clara10",
+      title: "Campanha Clara 10",
       type: "checkout",
     },
     rangeDays,

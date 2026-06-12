@@ -120,10 +120,10 @@ Exemplo:
 https://cupom.langy.space/relatorio/rpt_8Yp2Nq4Tz6Vb1Rc5
 ```
 
-Exemplo demonstrativo com dados mockados da Duda:
+Exemplo demonstrativo com dados mockados da Clara:
 
 ```text
-https://cupom.langy.space/relatorio/rpt_DudaDemo9Xc4Pn7
+https://cupom.langy.space/relatorio/rpt_ClaraDemo9Xc4Pn7
 ```
 
 Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` com o
