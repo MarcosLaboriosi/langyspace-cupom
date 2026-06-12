@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Langy.space">
-  <rect width="512" height="512" rx="96" fill="#000000" />
+  <rect width="512" height="512" rx="120" fill="#000000" />
   <polygon
     fill="#ff0a55"
     points="188 75 203 184 280 199 204 214 188 291 172 215 96 199 173 184"
