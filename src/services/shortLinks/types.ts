@@ -84,6 +84,7 @@ export interface ShortLinkMetricsLink {
   campaignId: string | null;
   campaignName: string | null;
   couponCode: string | null;
+  discountLabel: string | null;
   id: string;
   influencerId: string | null;
   influencerName: string | null;
@@ -93,24 +94,42 @@ export interface ShortLinkMetricsLink {
 }
 
 export interface ShortLinkMetricsFunnel {
+  accountCreatedRate: number;
+  accountCreations: number;
+  checkoutStartRate: number;
+  checkoutStarts: number;
   clickToEnrollmentRate: number;
   clickToPaymentViewRate: number;
   clicks: number;
   enrollments: number;
+  paymentConfirmRate: number;
+  paymentsConfirmed: number;
   paymentViewToEnrollmentRate: number;
   paymentViews: number;
+  registrationViewRate: number;
+  registrationViews: number;
 }
 
 export interface ShortLinkMetricsDailyItem {
+  accountCreations: number;
+  checkoutStarts: number;
   clicks: number;
   date: string;
   enrollments: number;
+  paymentsConfirmed: number;
   paymentViews: number;
+  registrationViews: number;
 }
 
 export interface ShortLinkMetricsTopItem {
   count: number;
   label: string;
+}
+
+export interface ShortLinkMetricsHeatmapItem {
+  count: number;
+  hour: number;
+  weekday: string;
 }
 
 export interface ShortLinkMetricsDetails {
@@ -125,12 +144,21 @@ export interface ShortLinkMetricsDetails {
       | "checkout_created"
       | "payment_viewed"
       | "payment_confirmed"
+      | "registration_viewed"
+      | "account_created"
       | "subscription_created",
       number
     >
   >;
+  clickHeatmap: ShortLinkMetricsHeatmapItem[];
+  privacyThreshold: number;
   statusBreakdown: Record<string, number>;
+  topCities: ShortLinkMetricsTopItem[];
+  topClickHours: ShortLinkMetricsTopItem[];
+  topClickWeekdays: ShortLinkMetricsTopItem[];
+  topDevices: ShortLinkMetricsTopItem[];
   topReferrers: ShortLinkMetricsTopItem[];
+  topRegions: ShortLinkMetricsTopItem[];
   topUtms: {
     campaign: ShortLinkMetricsTopItem[];
     content: ShortLinkMetricsTopItem[];

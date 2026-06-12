@@ -122,9 +122,16 @@ https://cupom.langy.space/relatorio/rpt_8Yp2Nq4Tz6Vb1Rc5
 
 Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` com o
 `reportId`, nao com o slug publico do cupom. O painel mostra apenas dados agregados e sanitizados:
-cliques, visualizacoes da tela de pagamento, matriculas realizadas, taxas de conversao, serie
-diaria, status dos cliques, UTMs e dominios de referrer. Ela nao le Firestore direto no cliente e
-nao mostra nome, telefone, e-mail, IP, user agent bruto nem URL completa.
+funil da campanha, cliques, cadastros iniciados, contas criadas, checkouts, pagamentos,
+matriculas realizadas, taxas de conversao, serie diaria, UTMs, conteudos divulgados, horarios,
+dispositivos e regioes agregadas. Ela nao le Firestore direto no cliente e nao mostra nome,
+telefone, e-mail, IP, user agent bruto nem URL completa.
+
+Regioes, cidades e conteudos so devem aparecer no painel publico quando atingirem o volume minimo
+definido pelo backend; abaixo disso, o painel agrupa em "Outras regioes", "Outras cidades" ou
+"Outros conteudos". Os links prontos do painel adicionam UTMs por formato (`bio`, `story`, `reels`,
+`post`, `whatsapp`) para melhorar a leitura da campanha sem exigir que a influencer monte URLs
+manualmente.
 
 Para atribuicao completa, `resolveShortLinkRedirect` adiciona `shortLinkClickId` e `shortLinkSlug`
 em destinos first-party como `student.langy.space`. O app de aluno preserva esses parametros ate o
