@@ -1,5 +1,9 @@
 import { httpsCallable } from "firebase/functions";
 import { functions } from "@/lib/firebase/functions";
+import {
+  demoShortLinkMetricsReportId,
+  getDemoShortLinkMetrics,
+} from "./mockMetrics";
 import type {
   ClickContext,
   GetShortLinkMetricsInput,
@@ -40,6 +44,10 @@ export const getShortLinkMetrics = async (
   id: string,
   rangeDays?: ShortLinkMetricsRangeDays,
 ): Promise<GetShortLinkMetricsResult> => {
+  if (id === demoShortLinkMetricsReportId) {
+    return getDemoShortLinkMetrics(rangeDays);
+  }
+
   const response = await getShortLinkMetricsCallable({
     id,
     rangeDays,

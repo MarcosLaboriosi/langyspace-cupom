@@ -120,6 +120,12 @@ Exemplo:
 https://cupom.langy.space/relatorio/rpt_8Yp2Nq4Tz6Vb1Rc5
 ```
 
+Exemplo demonstrativo com dados mockados da Duda:
+
+```text
+https://cupom.langy.space/relatorio/rpt_DudaDemo9Xc4Pn7
+```
+
 Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` com o
 `reportId`, nao com o slug publico do cupom. O painel mostra apenas dados agregados e sanitizados:
 funil da campanha, cliques, cadastros iniciados, contas criadas, checkouts, pagamentos,
