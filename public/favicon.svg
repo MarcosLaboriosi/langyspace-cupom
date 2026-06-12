@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Langy.space">
+  <rect width="512" height="512" fill="#000000" />
+  <polygon
+    fill="#ff0a55"
+    points="188 75 203 184 280 199 204 214 188 291 172 215 96 199 173 184"
+  />
+  <polygon
+    fill="#ff0a55"
+    points="347 269 359 325 417 337 359 349 347 405 335 349 278 337 335 325"
+  />
+</svg>
