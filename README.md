@@ -13,6 +13,8 @@ Crie manualmente um documento no Firestore:
 
 - Colecao: `short_links`
 - Documento: o slug em lowercase, por exemplo `livia10`
+- Campo `reportId`: identificador opaco usado apenas no painel publico, por exemplo
+  `rpt_8Yp2Nq4Tz6Vb1Rc5`
 
 ### Cupom de influencer para WhatsApp
 
@@ -20,6 +22,7 @@ Documento: `livia10`
 
 ```json
 {
+  "reportId": "rpt_8Yp2Nq4Tz6Vb1Rc5",
   "slug": "livia10",
   "title": "Cupom Lívia 10",
   "type": "whatsapp",
@@ -46,6 +49,7 @@ Documento: `aula-gratis`
 
 ```json
 {
+  "reportId": "rpt_4Rc9Zp2Qw7Lm6Tn1",
   "slug": "aula-gratis",
   "title": "Aula grátis",
   "type": "website",
@@ -65,6 +69,7 @@ Documento: `panfleto`
 
 ```json
 {
+  "reportId": "rpt_9Mh3Vx6Ka1Pb8Ny4",
   "slug": "panfleto",
   "title": "Panfleto físico",
   "type": "whatsapp",
@@ -106,20 +111,20 @@ lead.
 O painel publico de acompanhamento fica em:
 
 ```text
-https://cupom.langy.space/relatorio/<slug>
+https://cupom.langy.space/relatorio/<reportId>
 ```
 
 Exemplo:
 
 ```text
-https://cupom.langy.space/relatorio/livia10
+https://cupom.langy.space/relatorio/rpt_8Yp2Nq4Tz6Vb1Rc5
 ```
 
-Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` e mostra apenas
-dados agregados e sanitizados: cliques, visualizacoes da tela de pagamento, matriculas realizadas,
-taxas de conversao, serie diaria, status dos cliques, UTMs e dominios de referrer. Ela nao le
-Firestore direto no cliente e nao mostra nome, telefone, e-mail, IP, user agent bruto nem URL
-completa.
+Essa rota chama a callable `getShortLinkMetrics` no backend do `langyspace-teacher` com o
+`reportId`, nao com o slug publico do cupom. O painel mostra apenas dados agregados e sanitizados:
+cliques, visualizacoes da tela de pagamento, matriculas realizadas, taxas de conversao, serie
+diaria, status dos cliques, UTMs e dominios de referrer. Ela nao le Firestore direto no cliente e
+nao mostra nome, telefone, e-mail, IP, user agent bruto nem URL completa.
 
 Para atribuicao completa, `resolveShortLinkRedirect` adiciona `shortLinkClickId` e `shortLinkSlug`
 em destinos first-party como `student.langy.space`. O app de aluno preserva esses parametros ate o
@@ -178,6 +183,7 @@ Campos principais em `marketing_influencers/{influencerId}`:
   "defaultCampaignId": "embaixadoras-2026",
   "defaultCampaignName": "Embaixadoras",
   "defaultCouponCode": "LIVIA10",
+  "defaultShortLinkReportId": "rpt_8Yp2Nq4Tz6Vb1Rc5",
   "defaultShortLinkSlug": "livia10",
   "source": "influencer",
   "medium": "coupon",
@@ -200,6 +206,7 @@ Campos principais em `short_links/{slug}`:
 
 ```json
 {
+  "reportId": "rpt_8Yp2Nq4Tz6Vb1Rc5",
   "slug": "livia10",
   "title": "Cupom Lívia 10",
   "type": "whatsapp",

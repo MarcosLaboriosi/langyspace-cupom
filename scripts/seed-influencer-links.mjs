@@ -38,6 +38,7 @@ const influencers = [
       value: 10,
     },
     defaultCouponCode: "LIVIA10",
+    defaultShortLinkReportId: "rpt_8Yp2Nq4Tz6Vb1Rc5",
     defaultShortLinkSlug: "livia10",
     socialProfiles: {
       instagram: {
@@ -66,6 +67,7 @@ const influencers = [
       value: 10,
     },
     defaultCouponCode: "LETICIA10",
+    defaultShortLinkReportId: "rpt_5Kq9Lm2Ta8Xc4Pn7",
     defaultShortLinkSlug: "leticia10",
     socialProfiles: {
       instagram: {
@@ -94,6 +96,7 @@ const influencers = [
       value: 10,
     },
     defaultCouponCode: "CLARA10",
+    defaultShortLinkReportId: "rpt_2Vn7Rb5Qx9Mz3Hd8",
     defaultShortLinkSlug: "clara10",
     socialProfiles: {
       instagram: {
@@ -122,6 +125,7 @@ const influencers = [
       value: 10,
     },
     defaultCouponCode: "EMY10",
+    defaultShortLinkReportId: "rpt_6Dc4Ws8Jy2Lp9Tf3",
     defaultShortLinkSlug: "emy10",
     socialProfiles: {
       instagram: {
@@ -265,6 +269,7 @@ const buildInfluencerDocument = (influencer) => ({
   defaultCampaignId: campaignId,
   defaultCampaignName: campaignName,
   defaultCouponCode: influencer.defaultCouponCode,
+  defaultShortLinkReportId: influencer.defaultShortLinkReportId,
   defaultShortLinkSlug: influencer.defaultShortLinkSlug,
   source: "influencer",
   medium: "coupon",
@@ -274,6 +279,7 @@ const buildInfluencerDocument = (influencer) => ({
 });
 
 const buildShortLinkDocument = (influencer) => ({
+  reportId: influencer.defaultShortLinkReportId,
   slug: influencer.defaultShortLinkSlug,
   title: `Cupom ${influencer.displayName} 10`,
   type: "whatsapp",

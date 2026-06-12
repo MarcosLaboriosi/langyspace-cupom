@@ -17,10 +17,10 @@ import {
 } from "./utils";
 
 interface CouponMetricsPageProps {
-  slug: string;
+  id: string;
 }
 
-export function CouponMetricsPage({ slug }: CouponMetricsPageProps) {
+export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
   const [rangeDays, setRangeDays] = useState<ShortLinkMetricsRangeDays>(30);
   const [metrics, setMetrics] = useState<GetShortLinkMetricsResult | null>(
     null,
@@ -38,7 +38,7 @@ export function CouponMetricsPage({ slug }: CouponMetricsPageProps) {
     setIsLoading(true);
     setErrorMessage("");
 
-    getShortLinkMetrics(slug, rangeDays)
+    getShortLinkMetrics(id, rangeDays)
       .then((nextMetrics) => {
         if (!isCurrent) return;
 
@@ -59,9 +59,9 @@ export function CouponMetricsPage({ slug }: CouponMetricsPageProps) {
     return () => {
       isCurrent = false;
     };
-  }, [rangeDays, slug]);
+  }, [id, rangeDays]);
 
-  const pageTitle = metrics?.link.title ?? `Cupom ${slug}`;
+  const pageTitle = metrics?.link.title ?? "Relatório de cupom";
   const pageMeta = metrics?.link.couponCode
     ? `${metrics.link.couponCode} · ${metrics.link.campaignName ?? "campanha"}`
     : "relatório público";
@@ -127,7 +127,9 @@ export function CouponMetricsPage({ slug }: CouponMetricsPageProps) {
         {errorMessage ? (
           <div className="coupon-report__state" role="alert">
             <strong>{errorMessage}</strong>
-            <span>Confira o slug ou tente novamente em alguns instantes.</span>
+            <span>
+              Confira o id do relatório ou tente novamente em alguns instantes.
+            </span>
           </div>
         ) : isLoading && !metrics ? (
           <div className="coupon-report__kpi-grid">

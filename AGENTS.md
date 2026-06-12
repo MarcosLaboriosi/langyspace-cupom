@@ -11,8 +11,9 @@ Standalone React + Firebase app for `cupom.langy.space`.
 - The app is public and has no login.
 - Public redirects must resolve through the shared `langyspace-teacher` auth Functions codebase,
   not through direct client reads from `short_links`.
-- Public coupon reports live at `/relatorio/:slug` and must read sanitized aggregates through
-  `getShortLinkMetrics`, not direct Firestore reads.
+- Public coupon reports live at `/relatorio/:id`, where `id` is the opaque `reportId` stored on
+  `short_links`, and must read sanitized aggregates through `getShortLinkMetrics`, not direct
+  Firestore reads.
 - Shared Firestore rules for `short_links` and `short_link_clicks` currently live in
   `../langyspace-teacher/firestore.rules` because the Firestore database is shared with the existing
   Langy.space apps.
@@ -29,8 +30,8 @@ Standalone React + Firebase app for `cupom.langy.space`.
 
 Keep the app small. The redirect destination must come from `short_links/{slug}.destinationUrl`
 through the `resolveShortLinkRedirect` callable; do not hardcode coupon destinations in source code.
-Report routes should only show aggregate counts, rates, daily series, UTM/referrer summaries, and
-link metadata.
+Report routes use `short_links.reportId`, not the public slug, and should only show aggregate
+counts, rates, daily series, UTM/referrer summaries, and link metadata.
 
 Do not save raw IP, lead name, lead phone, lead email, or sensitive personal data. Click payloads are
 written server-side and may save campaign fields, UTMs, sanitized referrer, sanitized full URL,

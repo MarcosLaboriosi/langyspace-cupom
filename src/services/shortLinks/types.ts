@@ -75,8 +75,8 @@ export interface ShortLinkClickModel extends ClickContext {
 export type ShortLinkMetricsRangeDays = 7 | 30 | 90;
 
 export interface GetShortLinkMetricsInput {
+  id: string;
   rangeDays?: ShortLinkMetricsRangeDays;
-  slug: string;
 }
 
 export interface ShortLinkMetricsLink {
@@ -84,6 +84,7 @@ export interface ShortLinkMetricsLink {
   campaignId: string | null;
   campaignName: string | null;
   couponCode: string | null;
+  id: string;
   influencerId: string | null;
   influencerName: string | null;
   slug: string;

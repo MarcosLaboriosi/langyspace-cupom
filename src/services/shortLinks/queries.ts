@@ -37,12 +37,12 @@ export const resolveShortLinkRedirect = async (
 };
 
 export const getShortLinkMetrics = async (
-  slug: string,
+  id: string,
   rangeDays?: ShortLinkMetricsRangeDays,
 ): Promise<GetShortLinkMetricsResult> => {
   const response = await getShortLinkMetricsCallable({
+    id,
     rangeDays,
-    slug,
   });
 
   return response.data;

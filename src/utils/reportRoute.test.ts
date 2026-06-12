@@ -1,20 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { getReportSlugFromPathname } from "./reportRoute";
+import { getReportIdFromPathname } from "./reportRoute";
 
-describe("getReportSlugFromPathname", () => {
-  it("reads a valid report slug", () => {
-    expect(getReportSlugFromPathname("/relatorio/leticia10")).toBe("leticia10");
+describe("getReportIdFromPathname", () => {
+  it("reads a valid report id", () => {
+    expect(getReportIdFromPathname("/relatorio/rpt_8Yp2Nq4Tz6Vb1Rc5")).toBe(
+      "rpt_8Yp2Nq4Tz6Vb1Rc5",
+    );
   });
 
-  it("normalizes uppercase slugs", () => {
-    expect(getReportSlugFromPathname("/relatorio/LETICIA10/")).toBe(
-      "leticia10",
+  it("preserves case-sensitive report ids", () => {
+    expect(getReportIdFromPathname("/relatorio/Rpt8Yp2Nq4Tz6Vb1Rc5/")).toBe(
+      "Rpt8Yp2Nq4Tz6Vb1Rc5",
     );
   });
 
   it("returns empty for redirect paths and invalid report paths", () => {
-    expect(getReportSlugFromPathname("/leticia10")).toBe("");
-    expect(getReportSlugFromPathname("/relatorio/bad/extra")).toBe("");
-    expect(getReportSlugFromPathname("/relatorio/-bad")).toBe("");
+    expect(getReportIdFromPathname("/leticia10")).toBe("");
+    expect(getReportIdFromPathname("/relatorio/leticia10")).toBe("");
+    expect(getReportIdFromPathname("/relatorio/bad")).toBe("");
+    expect(getReportIdFromPathname("/relatorio/bad/extra")).toBe("");
+    expect(getReportIdFromPathname("/relatorio/abc$123")).toBe("");
   });
 });
