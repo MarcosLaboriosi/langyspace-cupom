@@ -12,6 +12,8 @@ export interface ShareLink {
   url: string;
 }
 
+export const shortLinkOrigin = "https://langy.space";
+
 export const formatPercent = (value: number) =>
   `${value.toLocaleString("pt-BR", {
     maximumFractionDigits: 1,
@@ -84,18 +86,16 @@ const buildShareLinkUrl = ({
   campaign,
   content,
   medium,
-  origin,
   slug,
   source,
 }: {
   campaign: string;
   content: string;
   medium: string;
-  origin: string;
   slug: string;
   source: string;
 }) => {
-  const url = new URL(`/${slug}`, origin);
+  const url = new URL(`/${slug}`, shortLinkOrigin);
 
   url.searchParams.set("utm_source", source);
   url.searchParams.set("utm_medium", medium);
@@ -107,7 +107,6 @@ const buildShareLinkUrl = ({
 
 export const buildShareLinks = (
   metrics: GetShortLinkMetricsResult,
-  origin: string,
 ): ShareLink[] => {
   const campaign = metrics.link.campaignId ?? metrics.link.slug;
   const slug = metrics.link.slug;
@@ -120,7 +119,6 @@ export const buildShareLinks = (
         campaign,
         content: "bio",
         medium: "profile",
-        origin,
         slug,
         source: "instagram",
       }),
@@ -132,7 +130,6 @@ export const buildShareLinks = (
         campaign,
         content: "story",
         medium: "social",
-        origin,
         slug,
         source: "instagram",
       }),
@@ -144,7 +141,6 @@ export const buildShareLinks = (
         campaign,
         content: "reels",
         medium: "social",
-        origin,
         slug,
         source: "instagram",
       }),
@@ -156,7 +152,6 @@ export const buildShareLinks = (
         campaign,
         content: "post",
         medium: "social",
-        origin,
         slug,
         source: "instagram",
       }),
@@ -168,7 +163,6 @@ export const buildShareLinks = (
         campaign,
         content: "whatsapp",
         medium: "dm",
-        origin,
         slug,
         source: "whatsapp",
       }),

@@ -63,18 +63,15 @@ const createMetrics = (): GetShortLinkMetricsResult => ({
 
 describe("CouponMetricsPage utils", () => {
   it("builds ready-to-share links with campaign UTMs", () => {
-    const shareLinks = buildShareLinks(
-      createMetrics(),
-      "https://cupom.langy.space",
-    );
+    const shareLinks = buildShareLinks(createMetrics());
 
     expect(shareLinks[0]).toMatchObject({
       label: "Bio",
-      url: "https://cupom.langy.space/leticia10?utm_source=instagram&utm_medium=profile&utm_campaign=embaixadoras-2026&utm_content=bio",
+      url: "https://langy.space/leticia10?utm_source=instagram&utm_medium=profile&utm_campaign=embaixadoras-2026&utm_content=bio",
     });
     expect(shareLinks.at(-1)).toMatchObject({
       label: "WhatsApp",
-      url: "https://cupom.langy.space/leticia10?utm_source=whatsapp&utm_medium=dm&utm_campaign=embaixadoras-2026&utm_content=whatsapp",
+      url: "https://langy.space/leticia10?utm_source=whatsapp&utm_medium=dm&utm_campaign=embaixadoras-2026&utm_content=whatsapp",
     });
   });
 

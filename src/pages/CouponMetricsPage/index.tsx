@@ -17,6 +17,7 @@ import {
   getStepRate,
   getTopItemsOrFallback,
   rangeOptions,
+  shortLinkOrigin,
 } from "./utils";
 
 interface CouponMetricsPageProps {
@@ -57,7 +58,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
     [metrics?.daily],
   );
   const shareLinks = useMemo(
-    () => (metrics ? buildShareLinks(metrics, window.location.origin) : []),
+    () => (metrics ? buildShareLinks(metrics) : []),
     [metrics],
   );
 
@@ -97,7 +98,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
     ? `${metrics.link.couponCode} · ${metrics.link.discountLabel ?? metrics.link.campaignName ?? "campanha"}`
     : "";
   const publicLink = metrics
-    ? new URL(`/${metrics.link.slug}`, window.location.origin).toString()
+    ? new URL(`/${metrics.link.slug}`, shortLinkOrigin).toString()
     : "";
   const summaryCards = metrics
     ? [
