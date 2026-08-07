@@ -84,7 +84,7 @@ describe("buildRedirectDestination", () => {
 
   it("keeps WhatsApp links unchanged", () => {
     const destinationUrl =
-      "https://wa.me/5534997711070?text=Oi%2C%20Langy.space!%20Vim%20pela%20influencer%20Let%C3%ADcia%20e%20queria%20usar%20o%20cupom%20LETICIA10.";
+      "https://wa.me/353838746045?text=Oi%2C%20Langy.space!%20Vim%20pela%20influencer%20Let%C3%ADcia%20e%20queria%20usar%20o%20cupom%20LETICIA10.";
 
     expect(
       buildRedirectDestination(

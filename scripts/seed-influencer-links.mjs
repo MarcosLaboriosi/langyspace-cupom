@@ -4,7 +4,7 @@ const projectId = "langyspace-564b5";
 const databaseId = "(default)";
 const campaignId = "embaixadoras-2026";
 const campaignName = "Embaixadoras";
-const langyWhatsappNumber = "5534997711070";
+const langyWhatsappNumber = "353838746045";
 
 const timestamp = (value) => ({ __firestoreType: "timestamp", value });
 
