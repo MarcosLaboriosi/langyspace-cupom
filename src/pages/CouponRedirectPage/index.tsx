@@ -4,14 +4,12 @@ import {
   FALLBACK_REDIRECT_URL,
   REDIRECT_DESCRIPTION,
   REDIRECT_TITLE,
-  SHORT_LINK_RESOLVE_TIMEOUT_MS,
 } from "@/config/constants";
 import { resolveShortLinkRedirect } from "@/services/shortLinks";
 import {
   getClickContext,
   isValidSlug,
   normalizeSlug,
-  withTimeout,
 } from "@/services/shortLinks/utils";
 import { redirectTo } from "@/utils/redirect";
 
@@ -31,9 +29,9 @@ export const CouponRedirectPage = () => {
           window.location,
           document.referrer,
         );
-        const destinationUrl = await withTimeout(
-          resolveShortLinkRedirect(slug, clickContext),
-          SHORT_LINK_RESOLVE_TIMEOUT_MS,
+        const destinationUrl = await resolveShortLinkRedirect(
+          slug,
+          clickContext,
         );
 
         redirectTo(destinationUrl);

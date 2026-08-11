@@ -173,17 +173,3 @@ export const buildRedirectDestination = (
     return link.destinationUrl;
   }
 };
-
-export const withTimeout = async <T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-): Promise<T> =>
-  Promise.race([
-    promise,
-    new Promise<never>((_, reject) => {
-      window.setTimeout(
-        () => reject(new Error("Timed out while recording short link click")),
-        timeoutMs,
-      );
-    }),
-  ]);

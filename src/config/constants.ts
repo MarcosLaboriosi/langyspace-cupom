@@ -4,8 +4,6 @@ export const SHORT_LINKS_COLLECTION = "short_links";
 
 export const SHORT_LINK_CLICKS_COLLECTION = "short_link_clicks";
 
-export const SHORT_LINK_RESOLVE_TIMEOUT_MS = 3000;
-
 export const REDIRECT_TITLE = "Redirecionando...";
 
 export const REDIRECT_DESCRIPTION =
