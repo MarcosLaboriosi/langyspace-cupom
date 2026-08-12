@@ -125,7 +125,7 @@
 
 .coupon-report__kpi-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.875rem;
 }
 
@@ -149,12 +149,6 @@
   border-color: #111111;
 }
 
-.coupon-report__kpi[data-tone="pink"] {
-  color: #ffffff;
-  background: #ff0050;
-  border-color: #ff0050;
-}
-
 .coupon-report__kpi[data-tone="teal"] {
   color: #ffffff;
   background: #007f78;
@@ -170,8 +164,6 @@
 
 .coupon-report__kpi[data-tone="dark"] span,
 .coupon-report__kpi[data-tone="dark"] small,
-.coupon-report__kpi[data-tone="pink"] span,
-.coupon-report__kpi[data-tone="pink"] small,
 .coupon-report__kpi[data-tone="teal"] span,
 .coupon-report__kpi[data-tone="teal"] small {
   color: rgba(255, 255, 255, 0.78);
@@ -318,7 +310,7 @@
 
 .coupon-report__bars {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: end;
   height: 11rem;
   gap: 0.125rem;
@@ -337,11 +329,6 @@
 .coupon-report__bars [data-kind="payment"],
 .coupon-report__legend [data-kind="payment"]::before {
   background: #007f78;
-}
-
-.coupon-report__bars [data-kind="enrollment"],
-.coupon-report__legend [data-kind="enrollment"]::before {
-  background: #ff0050;
 }
 
 .coupon-report__chart-day small {

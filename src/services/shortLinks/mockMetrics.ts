@@ -260,6 +260,7 @@ export const getDemoShortLinkMetrics = (
       campaignId: "campanha-clara-demo-2026",
       campaignName: "Campanha Clara Demo",
       couponCode: "CLARA10",
+      couponCodes: ["CLARA10"],
       discountLabel: "10% off todos os meses",
       id: demoShortLinkMetricsReportId,
       influencerId: "clara-demo",

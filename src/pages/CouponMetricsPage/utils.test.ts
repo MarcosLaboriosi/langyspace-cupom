@@ -50,6 +50,7 @@ const createMetrics = (): GetShortLinkMetricsResult => ({
     campaignId: "embaixadoras-2026",
     campaignName: "Embaixadoras",
     couponCode: "LETICIA10",
+    couponCodes: ["LETICIA10"],
     discountLabel: "10% off todos os meses",
     id: "rpt_8Yp2Nq4Tz6Vb1Rc5",
     influencerId: "leticia",

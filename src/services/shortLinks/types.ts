@@ -84,6 +84,7 @@ export interface ShortLinkMetricsLink {
   campaignId: string | null;
   campaignName: string | null;
   couponCode: string | null;
+  couponCodes: string[];
   discountLabel: string | null;
   id: string;
   influencerId: string | null;

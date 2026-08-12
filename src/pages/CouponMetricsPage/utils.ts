@@ -34,7 +34,6 @@ export const getDailyMax = (daily: ShortLinkMetricsDailyItem[]) =>
     1,
     ...daily.flatMap((item) => [
       item.clicks,
-      item.enrollments,
       item.paymentViews,
       item.paymentsConfirmed,
     ]),

@@ -94,9 +94,19 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
   const pageTitle = metrics?.link.influencerName
     ? `Campanha da ${metrics.link.influencerName}`
     : (metrics?.link.title ?? "Relatório de campanha");
-  const pageMeta = metrics?.link.couponCode
-    ? `${metrics.link.couponCode} · ${metrics.link.discountLabel ?? metrics.link.campaignName ?? "campanha"}`
-    : "";
+  const reportCouponCodes = metrics
+    ? metrics.link.couponCodes?.length > 0
+      ? metrics.link.couponCodes
+      : metrics.link.couponCode
+        ? [metrics.link.couponCode]
+        : []
+    : [];
+  const pageMeta =
+    reportCouponCodes.length > 1
+      ? `${reportCouponCodes.join(" · ")} · campanha consolidada`
+      : reportCouponCodes.length === 1
+        ? `${reportCouponCodes[0]} · ${metrics?.link.discountLabel ?? metrics?.link.campaignName ?? "campanha"}`
+        : "";
   const publicLink = metrics
     ? new URL(`/${metrics.link.slug}`, shortLinkOrigin).toString()
     : "";
@@ -131,12 +141,6 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
           meta: `${formatPercent(metrics.funnel.paymentConfirmRate)} dos pagamentos abertos`,
           tone: "teal",
           value: formatCompactNumber(metrics.funnel.paymentsConfirmed),
-        },
-        {
-          label: "Matrículas",
-          meta: `${formatPercent(metrics.funnel.clickToEnrollmentRate)} dos cliques`,
-          tone: "pink",
-          value: formatCompactNumber(metrics.funnel.enrollments),
         },
       ]
     : [];
@@ -173,19 +177,11 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
           previousValue: metrics.funnel.paymentViews,
           value: metrics.funnel.paymentsConfirmed,
         },
-        {
-          label: "Matrícula",
-          previousValue:
-            metrics.funnel.paymentsConfirmed || metrics.funnel.paymentViews,
-          value: metrics.funnel.enrollments,
-        },
       ]
     : [];
   const funnelMax = Math.max(1, metrics?.funnel.clicks ?? 0);
   const directCouponViews =
     metrics?.details.attribution.fallbackPaymentViews ?? 0;
-  const directCouponEnrollments =
-    metrics?.details.attribution.fallbackEnrollments ?? 0;
 
   return (
     <main className="coupon-report">
@@ -231,7 +227,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
           </div>
         ) : isLoading && !metrics ? (
           <div className="coupon-report__kpi-grid">
-            {Array.from({ length: 6 }, (_, index) => (
+            {Array.from({ length: 5 }, (_, index) => (
               <div
                 className="coupon-report__kpi"
                 data-loading="true"
@@ -323,12 +319,6 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
                     <span>Pagamentos com cupom</span>
                     <strong>{formatCompactNumber(directCouponViews)}</strong>
                   </div>
-                  <div>
-                    <span>Matrículas com cupom</span>
-                    <strong>
-                      {formatCompactNumber(directCouponEnrollments)}
-                    </strong>
-                  </div>
                 </div>
               </article>
 
@@ -358,15 +348,6 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
                             )}%`,
                           }}
                         />
-                        <span
-                          data-kind="enrollment"
-                          style={{
-                            height: `${Math.max(
-                              6,
-                              (item.enrollments / dailyMax) * 100,
-                            )}%`,
-                          }}
-                        />
                       </div>
                       <small>{formatDateLabel(item.date)}</small>
                     </div>
@@ -375,7 +356,6 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
                 <div className="coupon-report__legend">
                   <span data-kind="clicks">Cliques</span>
                   <span data-kind="payment">Pagamentos</span>
-                  <span data-kind="enrollment">Matrículas</span>
                 </div>
               </article>
 
@@ -502,9 +482,9 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
             </section>
 
             <p className="coupon-report__trust-note">
-              Matrícula conta assinatura criada. Dados de região e conteúdo só
-              aparecem agregados, com volume mínimo, sem mostrar dados de
-              alunas.
+              Pagamento confirmado conta aluna pagante confirmada. Dados de
+              região e conteúdo só aparecem agregados, com volume mínimo, sem
+              mostrar dados de alunas.
             </p>
           </>
         ) : null}
