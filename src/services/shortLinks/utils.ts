@@ -5,6 +5,7 @@ import type {
   UtmParams,
 } from "./types";
 import { shortLinkTypes } from "./types";
+import { TRIAL_LESSON_FORM_URL } from "@/config/constants";
 
 const slugPattern = /^[a-z0-9][a-z0-9_-]{0,79}$/;
 
@@ -42,12 +43,41 @@ const removeSearchAndHash = (value: string) => {
 };
 
 export const normalizeSlug = (pathname: string) => {
-  const [firstSegment = ""] = pathname.replace(/^\/+|\/+$/g, "").split("/");
+  const trimmedPath = pathname.replace(/^\/+|\/+$/g, "");
 
-  return firstSegment.toLowerCase().replace(/\s+/g, "");
+  if (!trimmedPath || trimmedPath.includes("/")) {
+    return "";
+  }
+
+  return trimmedPath.toLowerCase().replace(/\s+/g, "");
 };
 
 export const isValidSlug = (slug: string) => slugPattern.test(slug);
+
+export const buildTrialLessonFormFallbackUrl = (slug?: string) => {
+  const destinationUrl = new URL(TRIAL_LESSON_FORM_URL);
+
+  if (slug && isValidSlug(slug)) {
+    destinationUrl.searchParams.set("shortLinkSlug", slug);
+  }
+
+  return destinationUrl.toString();
+};
+
+export const isTopOfLandingDestination = (destinationUrl: string) => {
+  try {
+    const url = new URL(destinationUrl);
+
+    return (
+      url.origin === "https://langy.space" &&
+      url.pathname === "/" &&
+      url.search === "" &&
+      url.hash === ""
+    );
+  } catch {
+    return false;
+  }
+};
 
 export const isShortLinkType = (value: unknown): value is ShortLinkType =>
   typeof value === "string" && shortLinkTypes.includes(value as ShortLinkType);

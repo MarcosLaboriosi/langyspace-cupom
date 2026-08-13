@@ -5,6 +5,7 @@ const databaseId = "(default)";
 const campaignId = "embaixadoras-2026";
 const campaignName = "Embaixadoras";
 const langyWhatsappNumber = "353838746045";
+const trialLessonFormUrl = "https://langy.space/#aula-experimental";
 
 const timestamp = (value) => ({ __firestoreType: "timestamp", value });
 
@@ -16,12 +17,6 @@ const collections = {
 
 const buildInstagramUrl = (handle) =>
   handle ? `https://www.instagram.com/${handle.replace(/^@/, "")}/` : null;
-
-const buildInfluencerWhatsappUrl = (influencer) => {
-  const message = `Oi, Langy.space! Vim pela influencer ${influencer.displayName} e queria usar o cupom ${influencer.defaultCouponCode}.`;
-
-  return `https://wa.me/${langyWhatsappNumber}?text=${encodeURIComponent(message)}`;
-};
 
 const influencers = [
   {
@@ -282,8 +277,8 @@ const buildShortLinkDocument = (influencer) => ({
   reportId: influencer.defaultShortLinkReportId,
   slug: influencer.defaultShortLinkSlug,
   title: `Cupom ${influencer.displayName} 10`,
-  type: "whatsapp",
-  destinationUrl: buildInfluencerWhatsappUrl(influencer),
+  type: "form",
+  destinationUrl: trialLessonFormUrl,
   couponCode: influencer.defaultCouponCode,
   influencerId: influencer.id,
   influencerName: influencer.displayName,
@@ -314,7 +309,7 @@ const main = async () => {
       medium: "coupon",
       defaultWhatsappNumber: langyWhatsappNumber,
       notes:
-        "Campanha inicial de cupons das embaixadoras Langy.space com redirect para WhatsApp.",
+        "Campanha de cupons das embaixadoras Langy.space com redirect para o formulário de aula experimental.",
     },
   });
 

@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import logoWhiteSrc from "@/assets/horizontal-logo-white.svg";
-import {
-  FALLBACK_REDIRECT_URL,
-  REDIRECT_DESCRIPTION,
-  REDIRECT_TITLE,
-} from "@/config/constants";
+import { REDIRECT_DESCRIPTION, REDIRECT_TITLE } from "@/config/constants";
 import { resolveShortLinkRedirect } from "@/services/shortLinks";
 import {
+  buildTrialLessonFormFallbackUrl,
   getClickContext,
+  isTopOfLandingDestination,
   isValidSlug,
   normalizeSlug,
 } from "@/services/shortLinks/utils";
@@ -19,7 +17,7 @@ export const CouponRedirectPage = () => {
       const slug = normalizeSlug(window.location.pathname);
 
       if (!slug || !isValidSlug(slug)) {
-        redirectTo(FALLBACK_REDIRECT_URL);
+        redirectTo(buildTrialLessonFormFallbackUrl());
 
         return;
       }
@@ -34,9 +32,13 @@ export const CouponRedirectPage = () => {
           clickContext,
         );
 
-        redirectTo(destinationUrl);
+        redirectTo(
+          isTopOfLandingDestination(destinationUrl)
+            ? buildTrialLessonFormFallbackUrl(slug)
+            : destinationUrl,
+        );
       } catch {
-        redirectTo(FALLBACK_REDIRECT_URL);
+        redirectTo(buildTrialLessonFormFallbackUrl(slug));
       }
     };
 

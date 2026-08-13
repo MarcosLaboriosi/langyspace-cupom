@@ -31,6 +31,61 @@ const stressText =
 const stressToken =
   "campanhainstitucionalcomidentificadorextremamentelongosemespacos000000000000000000000000000000000000";
 
+async function auditRedirectFallback(page, baseUrl, width) {
+  const issues = [];
+  const stats = { containers: 0, controls: 0, maskedText: 0, scenarios: 0 };
+  const cases = [
+    {
+      id: "redirect-valid-fallback",
+      expected:
+        "https://langy.space/?shortLinkSlug=leticia10#aula-experimental",
+      path: "/leticia10?redirectAuditFixture=failure",
+    },
+    {
+      id: "redirect-invalid-fallback",
+      expected: "https://langy.space/#aula-experimental",
+      path: "/cupom/invalido?redirectAuditFixture=failure",
+    },
+  ];
+
+  for (const auditCase of cases) {
+    await page.goto(`${baseUrl}${auditCase.path}`, {
+      waitUntil: "domcontentloaded",
+    });
+    await page.waitForFunction(
+      () => window.__layoutAuditRedirectDestinations?.length === 1,
+    );
+    const destination = await page.evaluate(
+      () => window.__layoutAuditRedirectDestinations[0],
+    );
+
+    if (destination !== auditCase.expected) {
+      issues.push({
+        actualDestination: destination,
+        expectedDestination: auditCase.expected,
+        kind: "coupon-form-fallback-mismatch",
+        path: auditCase.path,
+      });
+    }
+
+    const scenario = {
+      caseId: auditCase.id,
+      mode: "normal",
+      path: auditCase.path,
+      width,
+    };
+    const result = await inspect(page, scenario);
+    issues.push(...result.issues);
+    stats.scenarios += 1;
+    stats.containers += result.stats.containers;
+    stats.controls += result.stats.controls;
+    stats.maskedText += result.stats.maskedText;
+    await screenshot(page, scenario, result.issues.length > 0);
+  }
+
+  return { issues, stats };
+}
+
 function openPort() {
   return new Promise((resolvePort, reject) => {
     const server = createServer();
@@ -95,6 +150,7 @@ async function inspect(page, scenario) {
       };
       const fullValueAvailable = (element) =>
         Boolean(
+          element.matches(".coupon-sr-only") ||
           element.getAttribute("aria-label")?.trim() ||
           element.getAttribute("title")?.trim(),
         );
@@ -121,7 +177,7 @@ async function inspect(page, scenario) {
       );
       document
         .querySelectorAll(
-          ".coupon-report__hero-inner, .coupon-report__content, .coupon-report__kpi, .coupon-report__panel, .coupon-report__section-header",
+          ".coupon-splash__content, .coupon-report__hero-inner, .coupon-report__content, .coupon-report__kpi, .coupon-report__panel, .coupon-report__section-header",
         )
         .forEach((container, containerIndex) => {
           if (!visible(container)) return;
@@ -215,7 +271,7 @@ async function screenshot(page, scenario, force = false) {
   if (
     !force &&
     (!captureScreenshots ||
-      scenario.mode !== "stress" ||
+      (scenario.caseId === "report" && scenario.mode !== "stress") ||
       !screenshotWidths.has(scenario.width))
   ) {
     return;
@@ -226,7 +282,7 @@ async function screenshot(page, scenario, force = false) {
     fullPage: true,
     path: resolve(
       artifacts,
-      `report-${scenario.width}-${scenario.mode}${force ? "-failure" : ""}.png`,
+      `${scenario.caseId}-${scenario.width}-${scenario.mode}${force ? "-failure" : ""}.png`,
     ),
   });
 }
@@ -245,6 +301,12 @@ async function run() {
     await server.listen();
     browser = await chromium.launch({ headless: true });
     const page = await browser.newPage({ viewport: { height, width: 2048 } });
+    await page.addInitScript(() => {
+      window.__layoutAuditRedirectDestinations = [];
+      window.addEventListener("couponRedirectAuditDestination", (event) => {
+        window.__layoutAuditRedirectDestinations.push(event.detail);
+      });
+    });
     await page.route("**/*", (route) => {
       const url = new URL(route.request().url());
       if (url.origin === baseUrl || ["blob:", "data:"].includes(url.protocol)) {
@@ -277,9 +339,15 @@ async function run() {
         issues.push(...result.issues);
         await screenshot(page, scenario, result.issues.length > 0);
       }
+      const redirectResult = await auditRedirectFallback(page, baseUrl, width);
+      issues.push(...redirectResult.issues);
+      totals.scenarios += redirectResult.stats.scenarios;
+      totals.containers += redirectResult.stats.containers;
+      totals.controls += redirectResult.stats.controls;
+      totals.maskedText += redirectResult.stats.maskedText;
     }
     const summary = {
-      cases: 1,
+      cases: 3,
       generatedAt: new Date().toISOString(),
       issues,
       totals,

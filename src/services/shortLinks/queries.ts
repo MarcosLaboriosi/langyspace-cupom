@@ -27,6 +27,14 @@ export const resolveShortLinkRedirect = async (
   slug: string,
   clickContext: ClickContext,
 ): Promise<string> => {
+  if (
+    import.meta.env.DEV &&
+    new URLSearchParams(window.location.search).get("redirectAuditFixture") ===
+      "failure"
+  ) {
+    throw new Error("Redirect audit fixture failed");
+  }
+
   const response = await resolveShortLinkRedirectCallable({
     clickContext,
     slug,

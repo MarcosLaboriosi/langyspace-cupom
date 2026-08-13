@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildRedirectDestination } from "./utils";
+import {
+  buildRedirectDestination,
+  buildTrialLessonFormFallbackUrl,
+  isTopOfLandingDestination,
+  normalizeSlug,
+} from "./utils";
 import type { ShortLinkModel, UtmParams } from "./types";
 
 const emptyUtmParams: UtmParams = {
@@ -100,5 +105,34 @@ describe("buildRedirectDestination", () => {
         },
       ),
     ).toBe(destinationUrl);
+  });
+});
+
+describe("coupon form fallback", () => {
+  it("keeps a validated slug as fallback attribution before the form hash", () => {
+    expect(buildTrialLessonFormFallbackUrl("leticia10")).toBe(
+      "https://langy.space/?shortLinkSlug=leticia10#aula-experimental",
+    );
+  });
+
+  it("omits attribution for an invalid or missing path", () => {
+    expect(buildTrialLessonFormFallbackUrl()).toBe(
+      "https://langy.space/#aula-experimental",
+    );
+    expect(buildTrialLessonFormFallbackUrl("cupom com espaço")).toBe(
+      "https://langy.space/#aula-experimental",
+    );
+    expect(normalizeSlug("/leticia10/extra")).toBe("");
+  });
+
+  it("recognizes only the legacy top-of-landing resolver fallback", () => {
+    expect(isTopOfLandingDestination("https://langy.space")).toBe(true);
+    expect(isTopOfLandingDestination("https://langy.space/")).toBe(true);
+    expect(
+      isTopOfLandingDestination(
+        "https://langy.space/?shortLinkSlug=leticia10#aula-experimental",
+      ),
+    ).toBe(false);
+    expect(isTopOfLandingDestination("https://wa.me/353838746045")).toBe(false);
   });
 });
