@@ -64,10 +64,44 @@ relevant code, preserve unrelated work, review the diff, and run focused validat
 - Dev server: `pnpm dev`
 - Unit tests: `pnpm test`
 - Production build/type check: `pnpm run build`
+- Mandatory UI release gate: `pnpm run validate:ui`
 - Preview production build: `pnpm run preview`
 - Deploy Hosting: `pnpm run deploy`
 
 ## workflow
+
+Every application-code or layout change must pass `pnpm run validate:ui` before completion, release
+commit or deploy. The deploy command and live workflow run the same blocking gate.
+
+### mandatory visual review for every repository prompt
+
+Before acting on any prompt in this repository, classify its visual impact as `direct`, `indirect`
+or `none`. `direct` covers rendered UI, copy, styles, assets, responsiveness and interaction.
+`indirect` covers data, API contracts, status values, loading/error behavior, ordering, density and
+actions that can change what the report renders. `none` requires a concrete reason and cannot be
+chosen merely because the edited file is backend or documentation.
+
+For `direct` or `indirect` impact, identify the affected route/state, content extremes and widths
+before implementation; verify audit coverage and add the missing sanitized case or fixture in the
+same task. Product planning, technical review and the task breakdown must record this decision.
+Completion requires `pnpm run validate:ui`, representative screenshot inspection and a repeated
+impact classification during final diff review.
+
+For `none`, the gate does not need to run, but the final handoff must state
+`Visual gate review: not applicable` and the reason. Every task ends with exactly one verdict:
+`passed` with evidence, `not applicable` with reason, or `blocked` with the failing surface. The
+review cannot be deferred to commit or deploy.
+
+When changing a page, report state, card, header, list, status or action, add the route or state to
+`scripts/audit-layout.mjs` when existing cases do not exercise it. Cover normal and adversarial long
+content at the applicable widths, including 390, 768, 1280, 1281, 1440, 1536, 1551, 1552 and 2048
+px for shared layouts. Reject overflow, masked clipping without an accessible full value, incomplete
+headers and controls outside their owner or viewport. Inspect screenshots for hierarchy, contrast
+and density. Never weaken an assertion just to pass; document an intentional exception and explicit
+selector in the active epic first.
+
+The audit must use only the sanitized demo report through local Vite and block external network
+requests. It must never read or mutate production data.
 
 Keep the app small. The redirect destination must come from `short_links/{slug}.destinationUrl`
 through the `resolveShortLinkRedirect` callable; do not hardcode coupon destinations in source code.

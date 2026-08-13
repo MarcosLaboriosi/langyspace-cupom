@@ -50,6 +50,7 @@
   margin: 0.75rem 0 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.9375rem;
+  overflow-wrap: anywhere;
 }
 
 .coupon-report__public-link {

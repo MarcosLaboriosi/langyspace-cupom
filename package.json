@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
     "test": "vitest run",
+    "test:layout": "node scripts/audit-layout.mjs",
+    "validate:ui": "pnpm test && pnpm run build && LAYOUT_AUDIT_SCREENSHOTS=1 pnpm run test:layout",
     "preview": "vite preview",
-    "deploy": "pnpm run build && npx firebase-tools deploy --only hosting:cupom --project langyspace-564b5",
+    "deploy": "pnpm run validate:ui && npx firebase-tools deploy --only hosting:cupom --project langyspace-564b5",
     "seed:influencers": "node scripts/seed-influencer-links.mjs"
   },
   "dependencies": {
@@ -20,6 +22,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "playwright": "1.61.0",
     "prettier": "^3.8.3",
     "typescript": "~6.0.2",
     "vite": "^8.0.9",
