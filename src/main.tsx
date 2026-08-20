@@ -1,3 +1,4 @@
+import "@langyspace/ui/styles.css";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import "./pages/CouponRedirectPage/styles.css";

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@langyspace/ui':
+        specifier: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz
+        version: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz(react@19.2.7)
       firebase:
         specifier: ^12.13.0
         version: 12.14.0
@@ -275,6 +278,13 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
+
+  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz':
+    resolution: {tarball: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz}
+    version: 0.1.0
+    engines: {node: '>=24'}
+    peerDependencies:
+      react: '>=19 <20'
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -1227,6 +1237,10 @@ snapshots:
       yargs: 17.7.2
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
+
+  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
 
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
