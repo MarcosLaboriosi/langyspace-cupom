@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@langyspace/ui";
 import logoWhiteSrc from "@/assets/horizontal-logo-white.svg";
 import {
   getShortLinkMetrics,
@@ -20,6 +19,7 @@ import {
   rangeOptions,
   shortLinkOrigin,
 } from "./utils";
+import * as Styled from "./styles";
 
 interface CouponMetricsPageProps {
   id: string;
@@ -205,9 +205,8 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
           </div>
           <div className="coupon-report__ranges" aria-label="Período">
             {rangeOptions.map((option) => (
-              <Button
+              <Styled.RangeButton
                 aria-pressed={option === rangeDays}
-                className="coupon-report__range"
                 key={option}
                 size="sm"
                 type="button"
@@ -215,7 +214,7 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
                 onClick={() => setRangeDays(option)}
               >
                 {option}d
-              </Button>
+              </Styled.RangeButton>
             ))}
           </div>
         </div>

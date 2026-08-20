@@ -14,10 +14,11 @@
     "seed:influencers": "node scripts/seed-influencer-links.mjs"
   },
   "dependencies": {
-    "@langyspace/ui": "https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.1.0/langyspace-ui-0.1.0.tgz",
+    "@langyspace/ui": "https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.2.1/langyspace-ui-0.2.1.tgz",
     "firebase": "^12.13.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "styled-components": "^6.4.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

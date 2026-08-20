@@ -72,17 +72,6 @@
   border-radius: 999px;
 }
 
-.coupon-report__range {
-  min-width: 3rem;
-  color: rgba(255, 255, 255, 0.72);
-  background: transparent;
-}
-
-.coupon-report__range[aria-pressed="true"] {
-  color: #050505;
-  background: #ffffff;
-}
-
 .coupon-report__content {
   width: min(100%, 88rem);
   margin-right: auto;
