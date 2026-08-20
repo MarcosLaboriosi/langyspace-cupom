@@ -4,7 +4,7 @@ const projectId = "langyspace-564b5";
 const databaseId = "(default)";
 const campaignId = "embaixadoras-2026";
 const campaignName = "Embaixadoras";
-const langyWhatsappNumber = "353838746045";
+const langyWhatsappNumber = "5524992111548";
 const trialLessonFormUrl = "https://langy.space/#aula-experimental";
 
 const timestamp = (value) => ({ __firestoreType: "timestamp", value });
