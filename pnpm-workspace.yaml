@@ -1,5 +1,5 @@
 minimumReleaseAgeExclude:
-  - "@langyspace/ui@0.5.1"
+  - "@langyspace/ui@0.6.0"
 
 allowBuilds:
   "@firebase/util": true
