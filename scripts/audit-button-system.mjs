@@ -6,6 +6,11 @@ const sourceRoot = resolve(root, "src");
 const sourceExtensions = new Set([".js", ".jsx", ".ts", ".tsx"]);
 const ignoredSource = /(?:^|\/)[^/]+\.(?:test|spec)\.[cm]?[jt]sx?$|\.d\.ts$/;
 
+const allowedDirectButtonImports = new Set([
+  "src/pages/CouponMetricsPage/styles.ts",
+]);
+const allowedDomainMotion = new Map([]);
+
 async function collectSourceFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = await Promise.all(
@@ -33,6 +38,46 @@ const failures = [];
 
 for (const file of files) {
   const source = await readFile(file, "utf8");
+  const sourcePath = relative(root, file);
+
+  if (/rotate\(\s*360deg\s*\)/.test(source)) {
+    failures.push(
+      `${sourcePath}: local wait spinner; use Spinner or Button isLoading from @langyspace/ui`,
+    );
+  }
+
+  if (
+    /(?:\bkeyframes\s*`|@keyframes\s+[\w-]+)/.test(source) &&
+    !allowedDomainMotion.has(sourcePath)
+  ) {
+    failures.push(
+      `${sourcePath}: unclassified motion; add an exact path, reason and owner to allowedDomainMotion`,
+    );
+  }
+
+  const packageImports = source.matchAll(
+    /(?:import|export)\s+(?:type\s+)?(?:\{([\s\S]*?)\}|[^'"]+)\s+from\s+['"]@langyspace\/ui['"]/g,
+  );
+  for (const match of packageImports) {
+    if (
+      /\bButton(?:\s+as\s+\w+)?\b/.test(match[1] ?? match[0]) &&
+      !allowedDirectButtonImports.has(sourcePath)
+    ) {
+      failures.push(
+        `${sourcePath}: direct Button import bypasses this product boundary; use the approved local import`,
+      );
+    }
+  }
+
+  if (
+    /type\s+\w*Button\w*\s*=\s*(?!Extract\b|Exclude\b|Pick\b|Omit\b)(?=[^;\n]*['"]primary['"])(?=[^;\n]*['"]secondary['"])[^;\n]+/.test(
+      source,
+    )
+  ) {
+    failures.push(
+      `${sourcePath}: copied Button union; derive it from the public @langyspace/ui types`,
+    );
+  }
 
   for (const declaration of declarations) {
     for (const match of source.matchAll(declaration.pattern)) {
