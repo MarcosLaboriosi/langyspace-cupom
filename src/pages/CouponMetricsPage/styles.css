@@ -64,14 +64,6 @@
   text-decoration: none;
 }
 
-.coupon-report__ranges {
-  display: inline-flex;
-  gap: 0.5rem;
-  padding: 0.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-}
-
 .coupon-report__content {
   width: min(100%, 88rem);
   margin-right: auto;
@@ -199,6 +191,7 @@
 }
 
 .coupon-report__panel {
+  min-width: 0;
   min-height: 17rem;
   padding: 1.25rem;
 }
@@ -470,10 +463,6 @@
   .coupon-report__hero-inner {
     grid-template-columns: 1fr;
     align-items: start;
-  }
-
-  .coupon-report__ranges {
-    width: fit-content;
   }
 
   .coupon-report__grid {

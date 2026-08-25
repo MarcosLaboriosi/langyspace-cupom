@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { SegmentedControl } from "@langyspace/ui";
 import logoWhiteSrc from "@/assets/horizontal-logo-white.svg";
 import {
   getShortLinkMetrics,
@@ -19,7 +20,11 @@ import {
   rangeOptions,
   shortLinkOrigin,
 } from "./utils";
-import * as Styled from "./styles";
+
+const rangeSelectorOptions = rangeOptions.map((value) => ({
+  label: `${value}d`,
+  value,
+}));
 
 interface CouponMetricsPageProps {
   id: string;
@@ -203,20 +208,14 @@ export function CouponMetricsPage({ id }: CouponMetricsPageProps) {
               </a>
             ) : null}
           </div>
-          <div className="coupon-report__ranges" aria-label="Período">
-            {rangeOptions.map((option) => (
-              <Styled.RangeButton
-                aria-pressed={option === rangeDays}
-                key={option}
-                size="sm"
-                type="button"
-                variant="tertiary"
-                onClick={() => setRangeDays(option)}
-              >
-                {option}d
-              </Styled.RangeButton>
-            ))}
-          </div>
+          <SegmentedControl
+            aria-label="Período"
+            options={rangeSelectorOptions}
+            shape="pill"
+            surface="inverse"
+            value={rangeDays}
+            onChange={setRangeDays}
+          />
         </div>
       </header>
       <section className="coupon-report__content" aria-busy={isLoading}>

@@ -328,6 +328,19 @@ async function run() {
         .first()
         .waitFor({ state: "visible" });
       await page.evaluate(() => document.fonts.ready);
+      const thirtyDayOption = page.getByRole("button", { name: "30d" });
+      await thirtyDayOption.click();
+      await page.waitForFunction(() => {
+        const group = document.querySelector(
+          '[role="group"][aria-label="Período"]',
+        );
+        const selected = group?.querySelectorAll('button[aria-pressed="true"]');
+
+        return (
+          selected?.length === 1 &&
+          selected.item(0).textContent?.trim() === "30d"
+        );
+      });
       for (const mode of ["normal", "stress"]) {
         if (mode === "stress") await stress(page);
         const scenario = { caseId: "report", mode, path, width };

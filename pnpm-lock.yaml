@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@langyspace/ui':
-        specifier: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz
-        version: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz(react@19.2.7)(styled-components@6.5.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        specifier: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz
+        version: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz(react@19.2.7)(styled-components@6.5.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       firebase:
         specifier: ^12.13.0
         version: 12.14.0
@@ -288,10 +288,11 @@ packages:
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
 
-  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz':
-    resolution: {integrity: sha512-605g+c5bg/JafCe5SQhR4mFZ++G8Udjc3KpX7QTz0eigcdV5MOuX083Za/DaSND197NzoLbqVuYbdqjTLgPpfQ==, tarball: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz}
-    version: 0.6.0
+  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz':
+    resolution: {tarball: https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz}
+    version: 1.0.0
     engines: {node: '>=24'}
+    hasBin: true
     peerDependencies:
       react: '>=19 <20'
       styled-components: '>=6 <7'
@@ -1273,7 +1274,7 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
-  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz(react@19.2.7)(styled-components@6.5.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
+  '@langyspace/ui@https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz(react@19.2.7)(styled-components@6.5.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
     dependencies:
       react: 19.2.7
       styled-components: 6.5.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
     "test": "vitest run",
-    "test:button-system": "node scripts/audit-button-system.mjs",
+    "test:button-system": "langyspace-ui-audit scripts/button-system.audit.config.mjs",
     "test:layout": "node scripts/audit-layout.mjs",
     "validate:ui": "pnpm run test:button-system && pnpm test && pnpm run build && LAYOUT_AUDIT_SCREENSHOTS=1 pnpm run test:layout",
     "preview": "vite preview",
@@ -15,7 +15,7 @@
     "seed:influencers": "node scripts/seed-influencer-links.mjs"
   },
   "dependencies": {
-    "@langyspace/ui": "https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v0.6.0/langyspace-ui-0.6.0.tgz",
+    "@langyspace/ui": "https://github.com/MarcosLaboriosi/langyspace-ui/releases/download/v1.0.0/langyspace-ui-1.0.0.tgz",
     "firebase": "^12.13.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
