@@ -24,3 +24,6 @@ gha-creds-*.json
 *.njsproj
 *.sln
 *.sw?
+
+# Local agent retrieval indexes
+graphify-out/
