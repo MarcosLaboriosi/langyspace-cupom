@@ -12,6 +12,7 @@ Preserve the root `AGENTS.md` invariants and load only what matches:
 - Short-link redirects, report access, click capture, Firestore rules, privacy, or deployment: read
   `references/contracts-and-privacy.md`.
 
-Execute one small subtask at a time and validate narrowly before the full applicable gate.
-Production writes, provider mutations, external messages, destructive cleanup, and deploys require
-explicit user intent and exact-target verification.
+Execute one small subtask at a time and validate narrowly before the full applicable gate. Batch
+independent read-only discovery and checks in one tool round; keep writes dependency-ordered and do
+not rerun an unchanged gate. Production writes, provider mutations, external messages, destructive
+cleanup, and deploys require explicit user intent and exact-target verification.
