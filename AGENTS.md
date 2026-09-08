@@ -23,6 +23,11 @@
 
 ## Contracts and safety
 
+- Keep route-level pages, screens, views, and containers in this product. Share a UI component
+  through `@langyspace/ui` when its visual or interaction contract is reusable across products;
+  size is not a boundary, so shared units may range from `Button`, `SearchInput`, `Card`, and
+  `Drawer` to a complete `Chat` section or `Calendar`. The product still owns routing, fetching,
+  domain state, business rules, and orchestration, passing data and actions into the component.
 - Keep the app small and public. Destination and report authorization contracts remain server-owned.
 - Never expose raw IP, names, phone, email, credentials, provider diagnostics, or other sensitive
   personal data. Browser reports receive aggregates only.
@@ -39,7 +44,7 @@ it for simple read-only answers or isolated documentation.
 
 ## Common commands
 
-- Development/build: `pnpm dev`, `pnpm run build`, `pnpm run preview`
+- Development/build: `pnpm dev`, `pnpm run build`, `pnpm run typecheck`, `pnpm run preview`
 - Tests: `pnpm test`
 - Mandatory direct/indirect UI gate: `pnpm run validate:ui`
 - Approved Hosting deploy: `pnpm run deploy`
