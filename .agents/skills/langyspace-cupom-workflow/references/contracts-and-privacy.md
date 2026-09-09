@@ -13,3 +13,13 @@
   `../langyspace-teacher/firestore.rules`; validate changes from Teacher with
   `pnpm run rules:check`.
 - Firebase project is `langyspace-564b5`; Hosting target/site is `cupom` / `langyspace-cupom`.
+
+## Contract lookup
+
+Follow [queries.ts](../../../../src/services/shortLinks/queries.ts) to the public request/response
+DTOs in [types.ts](../../../../src/services/shortLinks/types.ts), then compare the matching types in
+[Teacher's shortLinks domain](../../../../../langyspace-teacher/functions/packages/auth/src/domains/shortLinks/types.ts).
+`requestContext` is server enrichment; `ShortLinkDocument` describes storage. Share only a proven
+public projection when needed, never the entire storage/types module or Firebase SDK dependencies.
+From Teacher, `pnpm context:contracts -- resolveShortLinkRedirect` locates the callable and direct
+consumers; verify the returned source before changing a contract.
