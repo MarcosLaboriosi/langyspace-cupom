@@ -28,6 +28,12 @@
   failure, rerun only the failed check. After pushing, do not poll, watch, or inspect CI/deploy logs
   unless the user explicitly asks or a failure is reported. Report the commit and that delivery was
   initiated without claiming production completion.
+- After a push, make at most one non-blocking lookup filtered by the exact commit SHA to capture
+  workflow URLs. The final handoff must link the commit, test CI, and deploy CI/CD; reuse one URL
+  when a workflow covers both. If a run is not visible on that first lookup, link the workflow or
+  commit checks page and mark the run unavailable. Do not wait, poll, inspect
+  status/conclusion/logs, or retry. For work without a push, state that CI and deploy were not
+  triggered.
 - Use one agent by default. For explicitly parallel work, give each subagent a bounded,
   self-contained brief with minimal history; subagents do not run full gates or monitor CI. Collect
   each result once instead of polling.
