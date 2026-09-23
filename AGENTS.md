@@ -14,12 +14,23 @@
 - Preserve unrelated work. Read the active handoff/progress and next task before broad history.
 - Classify rendered impact before acting: `direct` changes UI/copy/layout/interaction; `indirect`
   changes data or behavior that can alter rendering; `none` has no plausible rendered effect.
-- Direct/indirect work identifies routes, states, extremes, and widths, fills audit gaps, runs
-  `pnpm run validate:ui`, and includes representative screenshot inspection.
-- Every final handoff contains exactly one verdict: `Visual gate review: passed` with evidence,
-  `not applicable` with a concrete reason, or `blocked` with the failing surface.
+- Direct/indirect work identifies routes, states, extremes, and widths and fills focused coverage
+  gaps. Run the smallest local check that adds evidence; CI owns `pnpm run validate:ui`, broad
+  audits, and full suites. The product owner performs visual review.
+- Every final handoff contains exactly one verdict: `Visual gate review: pending human` for rendered
+  changes, `accepted by human`, `not applicable` with a concrete reason, or `blocked` with the
+  failing surface.
 - Medium/large work uses reviewed, resumable `docs/epics/<name>/` documents and one small task at a
   time. Tiny work still requires inspection, focused validation, and diff review.
+- Internal subtasks do not require individual pushes. Finish the smallest coherent user delivery,
+  run at most two focused local checks (three only for high-risk changes), create a scoped commit,
+  and push once to `main`. Reuse successful evidence while relevant inputs are unchanged; after a
+  failure, rerun only the failed check. After pushing, do not poll, watch, or inspect CI/deploy logs
+  unless the user explicitly asks or a failure is reported. Report the commit and that delivery was
+  initiated without claiming production completion.
+- Use one agent by default. For explicitly parallel work, give each subagent a bounded,
+  self-contained brief with minimal history; subagents do not run full gates or monitor CI. Collect
+  each result once instead of polling.
 
 ## Contracts and safety
 
@@ -33,7 +44,8 @@
   personal data. Browser reports receive aggregates only.
 - Shared Firestore rules live in Teacher. Do not duplicate or loosen them locally.
 - Production writes, external messages, provider mutations, destructive cleanup, rules deploys,
-  and Hosting deploys require explicit user intent and exact-target verification.
+  and Hosting deploys require explicit user intent. Direct external side effects require exact
+  verification; ordinary CI/CD remains asynchronous and unmonitored.
 
 ## Progressive guidance
 
@@ -46,5 +58,5 @@ it for simple read-only answers or isolated documentation.
 
 - Development/build: `pnpm dev`, `pnpm run build`, `pnpm run typecheck`, `pnpm run preview`
 - Tests: `pnpm test`
-- Mandatory direct/indirect UI gate: `pnpm run validate:ui`
+- CI-owned direct/indirect UI gate: `pnpm run validate:ui`
 - Approved Hosting deploy: `pnpm run deploy`

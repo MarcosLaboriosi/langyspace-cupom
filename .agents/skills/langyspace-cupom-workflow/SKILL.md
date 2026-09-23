@@ -12,7 +12,11 @@ Preserve the root `AGENTS.md` invariants and load only what matches:
 - Short-link redirects, report access, click capture, Firestore rules, privacy, or deployment: read
   `references/contracts-and-privacy.md`.
 
-Execute one small subtask at a time and validate narrowly before the full applicable gate. Batch
-independent read-only discovery and checks in one tool round; keep writes dependency-ordered and do
-not rerun an unchanged gate. Production writes, provider mutations, external messages, destructive
-cleanup, and deploys require explicit user intent and exact-target verification.
+Execute one small subtask at a time. Batch independent read-only discovery and checks in one tool
+round; keep writes dependency-ordered. Run only the smallest local check that can detect a
+regression in the changed scope, with a default budget of two checks and three only for high-risk
+work. CI owns full suites, `validate:ui`, broad audits, and deploy validation. Do not rerun a
+successful check while its relevant inputs are unchanged, and do not monitor CI or deploy after
+pushing unless a failure is reported or the user explicitly requests it. Production writes,
+provider mutations, external messages, and destructive cleanup require explicit user intent and
+exact side-effect verification.
